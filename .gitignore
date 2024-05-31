@@ -45,3 +45,5 @@ yarn-error.log*
 
 # Contentlayer
 .contentlayer
+/structure101-settings.java.hsw
+/.idea/
