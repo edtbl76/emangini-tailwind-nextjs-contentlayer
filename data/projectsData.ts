@@ -12,15 +12,7 @@ const projectsData: Project[] = [
     education and transparent governance, empowering communities and driving 
     positive societal and environmental impacts.`,
     imgSrc: '/static/images/devvocates.png',
-    href: 'https://devvocates.org',
-  },
-  {
-    title: 'A Search Engine',
-    description: `What if you could look up any information in the world? Webpages, images, videos
-    and more. Google has many features to help you find exactly what you're looking
-    for.`,
-    imgSrc: '/static/images/google.png',
-    href: 'https://www.google.com',
+    href: 'https://github.com/devvocates',
   },
 ]
 

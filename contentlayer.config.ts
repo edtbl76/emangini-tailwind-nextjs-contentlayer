@@ -173,6 +173,7 @@ export default makeSource({
     ],
   },
   onSuccess: async (importData) => {
+    // @ts-ignore
     const { allBlogs } = await importData()
     createTagCount(allBlogs)
     createSearchIndex(allBlogs)
