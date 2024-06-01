@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next'
+// @ts-ignore
 import { allBlogs } from 'contentlayer/generated'
 import siteMetadata from '@/data/siteMetadata'
 
