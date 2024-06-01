@@ -1,18 +1,11 @@
-import React, { useEffect, useRef } from 'react'
+import Script from 'next/script'
 
-const NewsletterGroveForm: React.FC = () => {
-  const divRef = useRef<HTMLDivElement | null>(null)
-
-  useEffect(() => {
-    const scriptElement = document.createElement('script')
-    scriptElement.src = 'https://emangini.ck.page/0f15515414/index.js'
-    scriptElement.async = true
-    scriptElement.dataset.uid = '0f15515414'
-
-    divRef.current?.appendChild(scriptElement)
-  }, [])
-
-  return <div ref={divRef}></div>
-}
+const NewsletterGroveForm: React.FC = () => (
+  <Script
+    strategy="lazyOnload"
+    src="https://emangini.ck.page/0f15515414/index.js"
+    data-uid="0f15515414"
+  />
+)
 
 export default NewsletterGroveForm
