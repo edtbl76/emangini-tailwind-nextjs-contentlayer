@@ -82,11 +82,9 @@ export default function Home({ posts }) {
           </Link>
         </div>
       )}
+      <NewsletterGroveForm />
       {siteMetadata.newsletter?.provider && (
-        <div className="flex items-center justify-center pt-4">
-          {/*<NewsletterForm />*/}
-          <NewsletterGroveForm />
-        </div>
+        <div className="flex items-center justify-center pt-4">{/*<NewsletterForm />*/}</div>
       )}
     </>
   )
