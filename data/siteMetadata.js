@@ -4,12 +4,12 @@ const siteMetadata = {
   author: 'Edward Mangini',
   headerTitle: '@emangini',
   description:
-    'This is where i unpack thoughts and research on technology, business and leadership. No fluff, just the good stuff.',
+    'This is where I unpack thoughts and research on technology, business and leadership. No fluff, just the good stuff.',
   language: 'en-us',
   theme: 'system', // system, dark or light
   siteUrl: 'https://tailwind-nextjs-starter-blog.vercel.app',
   siteRepo: 'https://github.com/edtbl76/tailwind-nextjs-starter-blog',
-  siteLogo: '/static/images/logo.png',
+  //siteLogo: '/static/images/logo.png',
   socialBanner: '/static/images/twitter-card.png',
   mastodon: 'https://mastodon.social/@mastodonuser',
   email: 'me@emangini.com',
