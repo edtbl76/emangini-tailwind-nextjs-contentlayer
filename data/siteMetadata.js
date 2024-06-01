@@ -12,7 +12,7 @@ const siteMetadata = {
   siteRepo: 'https://github.com/edtbl76/tailwind-nextjs-starter-blog',
   //siteLogo: '/static/images/logo.png',
   socialBanner: '/static/images/twitter-card.png',
-  mastodon: 'https://mastodon.social/@mastodonuser',
+  //mastodon: 'https://mastodon.social/@mastodonuser',
   email: 'me@emangini.com',
   github: 'https://github.com/edtbl76',
   x: 'https://twitter.com/edward_mangini',
