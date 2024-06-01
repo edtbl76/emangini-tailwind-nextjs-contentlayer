@@ -1,0 +1,131 @@
+---
+title: 'Lightweight ADR: Architecture Decision Records'
+date: '2022-05-12'
+lastmod: '2023-03-07'
+tags: ['Architecture','Governance','ADR']
+draft: false
+summary: 'Learn how to effectively document and guide software architecture decisions using Lightweight Architecture Decision Records (ADRs) for improved communication and alignment among stakeholders.'
+---
+
+Architecture Decision Records (ADR) are the foundational artifact of any architecture-focused governance effort. There are several great resources about ADRs that I'll refer to at the end of the article. The resources provide excellent definitions and examples, so instead, I'd like to discuss why we use them and how to construct them so that others can use them effectively.
+
+ADRs are very much the "directional signal" of the software architecture world. Just as you turn on the blinkers in your
+car, truck, or motorcycle to signal to those coming behind you, an ADR helps provide a signal to architects, engineers,
+and product or business-minded stakeholders. A sound decision you make today may become a frustrating exercise in failed memory recall a year from now. That's why we write ADRs.
+
+The need for documentation and the degree to which it should extend is the subject of much debate. Sentiments in many books, blogs, and essays push the court of public opinion to the extremes; _no documentation vs. tomes of verbose artifacts._
+
+## Too little documentation: communication breaks down.
+
+There needs to be more documentation to help everyone. A codebase is descriptive of the solution to a point.
+However, it doesn't provide an easy-to-consume point of view to describe deeply technical concepts such as distributed systems at a sufficiently abstract level for business executives and strategic leaders to approach a shared understanding.
+
+## Too much documentation: breaking the shelf.
+
+On the other hand, too much documentation is time-consuming. Time is one of the most precious resources of an organization's employees. Spending time on documentation is incredibly expensive. You have to pay someone to create it, and you are paying everyone who consumes it to read it. It is wasteful if the documentation doesn't provide an informational fact, proper procedure, or other valuable information related to your work. Many business and enterprise architecture frameworks have built reputations for precisely that.
+
+---
+
+The relationships between competing forces, such as business and technology or strategic planning and tactical execution, are critical to the organization's success.
+
+The ADR is a conduit that facilitates the connection of these competing forces by translating plans into procedures.
+
+Determining what requires an ADR can be tricky. 
+
+If we only track high-level decisions, business plans, and technical strategies, the output won't be distilled enough for product managers and engineering leaders to start planning intervals (or sprints). On the other hand, if we track every tactical detail, nothing else will be accomplished because that will consume all of our time.
+
+Maturity also plays a part. Organizations that have recently started an architecture practice must make more foundational decisions than those operating for an extended period. This inclination represents an excellent approach for determining when technologists should create an ADR.
+
+Immature organizations will be embracing standards as they begin development. The first standards will likely be regulatory, such as HIPAA or PCI, where compliance is a business factor. However, architecture patterns and technology decisions will evolve as the development teams implement their solutions. ADRs are an excellent way to democratize the adoption of standards, patterns, and guidelines that will shape how technology teams operate.
+
+Logically, this leads us to our next possible use case for an ADR: "the unstandard." I don't anticipate this phrase to catch on, but it's my term for the decisions we've made that deviate from standards. These ADRs often provide a defensive posture, justifying why we didn't adhere to a standard.
+
+The former example of ADRs is associated with creating artifacts that represent a rule. Reviewing, challenging, and eventually accepting that rule must converge to represent organizational alignment.
+
+The latter example of ADRs is associated with a formal challenge of a pre-existing rule or the extension of that rule. An example of a rule's extension might be a good practice or specification for a programming language or technology we've adopted.
+
+Divergence is an exciting consequence because it allows us to challenge existing rules. Challenging existing constraints is a normal part of business, and it addresses the natural entropy that occurs over time.
+
+Just because a decision was relevant last year doesn't mean it is still relevant today. There is a common misconception among tech teams that addressing tech debt is something you can "complete." You can't. Even if you stop all development, patching, and any deliberate change, you can't stop the clock. The surrounding industry will change. Innovation, culture, economic trends, and global or local events can impact your end users, distribution channels, and partners.
+
+Technical debt accrues whether you plan for it or not. It is very much like erosion. Entropy is the primary reason for driving evolvable architectures.
+
+The lightweight ADR is one of the primary actions that lead to evolvable, easy-to-change designs.
+
+## Creating an Effective ADR.
+
+_If you've never written an ADR, stop reading and check out the links at the bottom of the article._ 
+
+### Three goals
+
+Every ADR I've written has had at least these three primary sections.
+1. Problem Statement
+2. An opinionated explanation of the solution to the problem.
+3. A brief explanation of any side effects or risks this solution introduces and how that solution will mitigate them.
+
+#### 1. The Problem Statement
+
+The problem statement should be a clear and concise written description of the problem. It should answer some of the following questions:
+
+Why are we doing this?
+Who is asking for it?
+Is it a dependency of some other work?
+What are the consequences of not solving it?
+
+You should strive for fluency when answering these questions. Remember, the ADR must represent value to the business and its goals. If we can speak fluently about the problem statement, it will strengthen the credibility of our solution. Fluency also makes us more confident, increasing the chance of influencing others to accept our proposal.
+
+#### 2. The Solution
+
+Solutioning is an activity where I frequently see confusion when coaching others. The most common problem I've seen is that the section will outline a possible solution instead of the recommended solution.
+
+The solution must be an opinionated answer to the problem statement. Some technologists are sensitive to the word opinion. In a binary sense, an opinion is the opposite of a fact. Pragmatically, facts aren't always available, so we have to find value in a spectrum of what is obtainable; data.
+
+We can rely on past implementations, industry trends, and technology forums. The result is a data-driven opinion.
+
+Technology solutioning is often a game of tradeoffs. When documenting the proposed solution, we will likely encounter situations where multiple solutions are considered appropriate.
+
+It is a good practice to briefly note practical alternatives to our proposal, followed by a few supporting data points that differentiate the chosen solution.
+
+I have seen many ADRs that approach solution alternatives as a software review, with long lists of feature comparisons. Remember, the solution should be a response to the problem statement. The supporting data points should be directly related to that problem. If we are designing a read-only system, data points about write speeds are just extra text.
+
+Proceed with care when providing alternatives. You only need to offer options that are practical considerations. If the proposal in the document is the only viable solution, then outline that. Similarly, outline the salient options. Unnecessary or exhaustive comparisons will bloat the decision record and undermine your confidence in the presented solution.
+
+###### To Diagram or Not to Diagram.
+
+Yes! Kind of.
+
+Ideally, it would be best if you could reference existing diagrams. If the ADR proposes a change to an existing architecture, those changes should go through the organization's change control and versioning process. If the ADR introduces a new design, it should reference that design document.
+
+An ADR shouldn't have separate diagrams. Design documents, deployment architectures, and reference architectures are select artifacts for communicating between various stakeholders. The accuracy of the outcomes of that communication depends on those artifacts acting as the source of truth for the architecture they represent. Separate diagrams can lead to confusion and misalignment.
+
+##### 3. Side Effects and Consequences
+
+There is no perfect solution. This section is sometimes referred to informally as the "CYA" section. The purpose is to be transparent about any risks that the design might present.
+
+As discussed in the solution section, this should list relevant, impactful risks. However, it will refer to more than just the problem statement.
+
+When we propose a solution, the intent is to solve the problem. When identifying risks, we have to specify them with a broader perspective. Are we introducing threats to this proposal? Are we introducing threats to other aspects of the business? What is the degree of those risks?
+
+I believe that this section determines whether or not an architecture earns the title of "thoughtful ."The first two sections represent the fundamental antecedent and consequent elements of problem-solving. This section concerns managing risk, one of the most critical functions of devising a business strategy.
+
+A value proposition isn't viable or marketable if the work required to achieve it is erratic, dangerous, or unpredictable.
+
+---
+
+## Final Thoughts
+
+ADRs should be as long as they need to be. It should include as much content as is required to communicate the
+three goals outlined above. (There are some variations included in the links I've provided.)
+
+Remember that the audience for ADRs isn't just stakeholders in the present. The audience is every person in the organization who can access this document until it is retired or superseded. It's an architectural time capsule. Speaking of time, we often have less of it than we'd like to
+get things done. Keep it concise. The length of a document has an inverse relationship with the probability that someone will read it.
+
+When presenting the ADR, whether a formal review board or an informal fireside with the necessary stakeholders, remember that software is a team sport. Architecture has to be collaborative and inclusive to be successful. Your greatest toolset is an open mind, two ears, and a team willing to provide you with input.
+
+---
+
+**ADR Resources**
+
+- [ADR Github](https://adr.github.io/)
+- [Nat Pryce's ADR Tools](https://github.com/npryce/adr-tools)
+- [ThoughWorks Tech Radar](https://www.thoughtworks.com/de-de/radar/techniques/lightweight-architecture-decision-records)

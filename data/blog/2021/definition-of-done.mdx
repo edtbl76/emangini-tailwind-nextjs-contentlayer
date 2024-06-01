@@ -1,0 +1,261 @@
+---
+title: 'Definition of Done'
+date: '2021-01-26'
+lastmod: '2023-02-24'
+tags: ['CI/CD', 'Test Driven Development', 'TDD', 'Continuous Integration', 'Continuous Delivery','Continuous Improvement', 'Continuous Deployment', 'Agile']
+draft: false
+summary: 'Understand the importance of a clear "Definition of Done" in project management to ensure quality, consistency, and successful delivery.'
+---
+
+What is the "definition of done"?
+
+Before relating this question to value streams,
+I'd like to compare this to something we can all relate to - writing.
+
+Whether it be a blog post, a college writing essay, or a high school book report, we have all had to traverse these cardinal steps:
+
+1. Rough Draft
+2. Have someone else review our work. (Hopefully)
+3. Endless Revision.
+
+Sure, we must hand it in or publish it at some point, but that last phase of endless revision represents how it feels.
+For those who consider writing a chore, a single correction feels like a monumental task.
+However, for those of us who love to write, we are never done.
+There is always a better word or phrase.
+There always seems to be just one more idea we want to present.
+
+These concepts are still relevant when we apply them to our work.
+Some feel disconnected, disenfranchised, and unempowered. It is tough to find clarity and purpose through a hazy
+emotional encumbrance.
+On the other hand,
+there are those so emotionally attached to their work that it is difficult for them to know when to let it go.
+We tend to cling to our output like our grown children leaving the nest.
+We must recognize that it isn't "our baby," and finding a sense of abandonment is healthy.
+However, there may be a way to game the system.
+
+Before we can personalize the approach, we must define our purpose. Let's start by defining a value stream.
+
+## Value stream
+
+A value stream is a collection of tasks required to provide value to an end user.
+While researching this article, I came across an interesting statement about value streams:
+
+>_"A value stream always begins and ends with a customer."_
+
+A naive view of this statement demonstrates a value stream as a straight line.
+This view is accurate if we consider the nuance of a single interaction.
+
+![Value Chain E2E](./img/definition_of_done-value-chain.png)
+
+
+However, the end of one interaction stimulates the beginning of the next. I'd challenge the quote above and restate it as follows:
+
+
+>"A value stream is a continuous flow of interactions through our customers."
+
+
+![definition_of_done-flywheel.png](./img/definition_of_done-flywheel.png)
+
+To define what 'done' means, we must determine how the workflow progresses. Let's reduce it into its fundamental steps:
+
+####  1 A signal of need comes from the consumer.
+
+It could be a direct statement from a single consumer or market research depicting trends leading towards an outcome where opportunities exist for organizations to invest.
+
+####  2 We, the producers, respond by creating the thing
+
+This step is the highest-level perspective of a business. We respond to demand with supply.
+
+If you're reading this article, you are likely working with technology, so we measure this output categorically in two ways.
+
+The business wing of an organization is responsible for "building the right thing." The technology wing of an organization is responsible for "building the thing right." The only way to get the bird to fly is if both wings work in unison.
+
+####  3 We listen
+
+Almost visual artifact I've encountered that describes this process mentions feedback at this step. I agree that feedback is the next step, but I want to emphasize how important it is to listen first.
+
+I've witnessed organizations excel at the first two steps but must pay attention to this detail when approaching feedback loops.
+
+Efficient organizations move so quickly that they over-index on internal feedback, which provides excellent insight into the execution of their business plans. Still, it doesn't measure the actual value extended to the customers.
+
+#### 4 Act
+
+This step is similar to step 2. The flight will be shorter because we have already accomplished the foundational work required to deliver the initial solution.
+
+---
+
+The shape of our flow has changed a bit. Rather than replacing the original straight line with a circular flow, we have a "ball of yarn." The stray line represents the first two steps, which are broad foundational activities. The last two steps represent an iterative process with the same categories of work, less the foundational exercises required to ignite the entire body of work.
+
+
+![definition_of_done-ball-of-yarn.png](./img/definition_of_done-ball-of-yarn.png)
+
+**Endless Revision.**
+
+## Getting nuanced: units of work
+
+How do we define done?
+
+Globally speaking, done could mean the retirement of a product.
+The lifecycle of some products exceeds a human lifetime.
+That is too large in scope.
+
+Ideally, done will have more than one definition because it represents the end of an interval of work.
+
+The definition of done to a software engineer pulling cards off a backlog will differ from that engineer's manager.
+That manager's definition will also vary from the executive team.
+
+Is there an atomic attribute to workstreams? Is our work transactional?
+If a single developer introduces a bug,
+does that mean their contribution to the larger body of work requires rolling back the entire body?
+It depends.
+
+The criticality and relationship of a single unit of work vary based on context and personal perspective.
+Therefore, atomicity is also contextual.
+
+When designing transaction flows, atomicity is defined based on a specific level within the hierarchy of a data structure.
+Defining done is similar; however, the scope is more dynamic.
+For instance, many eCommerce transactions consider an order the atomic unit.
+There may be substructures such as line items or fulfillments. Still,
+the order's success dictates whether or not the transaction is reverted.
+
+There are downstream activities that rely on the success of the transaction.
+We can define done as "the amount or state of work required to move forward."
+
+Let's apply this to development work.
+
+#### Done-0 - Self Dependencies & Acceptance Criteria
+
+A software engineer takes a card off of a JIRA board.
+They complete the job, commit and push the changes (tests pass!), and merge the new code into the main branch.
+Let's call this "done-0" or the lowest tier of done.
+
+What does "move forward" mean in this case?
+I define it as completing the work so the individual developer can perform another task.
+
+What are the "move forward" criteria?
+The unit of work must have sufficient acceptance criteria so that the developer can measure completeness.
+There must be validation data (in the form of functional tests) ensuring these acceptance criteria are satisfied.
+
+**[NOTE: This is a compelling argument for test-driven development.]**
+
+#### Done-1 - Intervals of Work & Functional Deployability
+
+This tier is about delivery cadence.
+After the end of an interval (sprint),
+the main branch will reflect the branch's initial state and the aggregate of the work performed by the team during the interval.
+
+High-performing organizations strive to keep their main branches perpetually deployable via continuous integration (CI).
+
+If deployability alone was the "move forward" criterion, then we might say that "done" is also continuous.
+It also means that each unit of work performed by "done-0" satisfies the "done-1" criteria.
+
+**[NOTE: This is a compelling reason to work towards performing CI]**
+
+Realistically, only some organizations practice CI.
+A reasonable transition to getting to CI is to ensure that your branches are deployable at the end of each work interval.
+
+What does "move forward" mean in "done-1"?
+It is similar to "done-0" but broader in scope.
+The team has completed the work intended to be completed in the work interval to move to the next body of work.
+
+
+What is "functional deployability"?
+It means the individual work units can be deployed without conflict while meeting their acceptance criteria.
+We commonly refer to this as building software.
+Whether we are practicing CI, building the software after the completion of each unit,
+or working towards it by assembling the software at the end of each interval,
+the end state of our work is a deployable software artifact.
+
+After "done-1", we can confidently say **we've built the product correctly.**
+
+#### Done-2 - Releasability
+
+After "done-1", we have a working software artifact, usually stored in a repository.
+
+"Done-2" involves various stages of categories of work to validate completeness.
+This tier is particular to the domain, type of product, and organizational maturity.
+
+Simple products may have more work related to more expensive testing,
+security scanning, and operational readiness requirements.
+
+Complex distributed systems must integrate services and components to construct the overall system.
+There will be tests to validate relationships between services, performance characteristics, end-to-end flows,
+cross-cutting concerns, and various categories of exploratory testing.
+
+High-performing organizations will have automated most of this.
+In rare cases,
+the most elite organizations may have decomposed acceptance criteria so that functional testing cascades into
+end-to-end flows,
+simplifying test cases.
+In these cases, it is possible that the completeness of each "done-0" unit satisfied the criteria for both "done-1" and "done-2".
+
+What is the "move forward"?
+It is a state of work where the output meets the demands of the consumers so that it is ready to be supplied.
+In technology value streams, this is software or systems in a releasable state.
+
+The steps to get to this point are broad.
+I've alluded to it above, but I'll summarize it as the collection of work that applies the business needs, based on external demand, to the functional outputs of "done-1".
+
+After "done-2", we can confidently say **we've released the correct product.**
+
+#### Done-3 - Supply
+
+Once we have created releasable software, we have to supply it. High-performing organizations perform one of two categories of CD:
+
+**Continuous Delivery**: Making releasable software available to be deployed manually to or retrieved by the end-users.
+
+**Continuous Deployment**: Directly deploying releasable software to the end-users.
+
+These are very complicated pipelines that require powerful automation and triggering.
+It involves triggering testing as soon as the CI process pushes a software artifact to a central repository.
+Once automated testing completes,
+automated tools publish the software to a marketplace or CDN or deploy it to an environment where the consumers can use it.
+
+Many organizations perform these steps with varying amounts of automation,
+with quality gates that require human interaction.
+
+Once we have supplied our products to the end-users,
+it's time to practice step 3 of our "ball of yarn" - ***listen***.
+
+## Definition of Done
+
+I hope I've brought you along with my thinking.
+Done is something intimate to the business,
+the parties within the enterprise who participate in the planning and execution of the organizational goals, and of course,
+the consumers we supply.
+
+Defining done in a meaningful way requires your time and effort.
+I've provided some guidelines that help facilitate that process.
+
+At the beginning of the article,
+I mentioned two high-level personal relationships with work;
+those who struggle with clarity and purpose to motivate themselves and those who require a sense of healthy abandonment to move forward.
+
+## Finding purpose
+
+Finding clarity and purpose can be very difficult for large ambiguous bodies of work.
+Driving business strategies to execution is a continuous process of elicitation and decomposition into smaller units of work;
+as they decrease in size and scope, clarity increases.
+The more we understand the tasks, the more confidently we can complete them.
+It becomes as simple as [making your bed](https://www.youtube.com/watch?v=3sK3wJAxGfs). (This is a link to a great
+speech by retired Navy Seal and Admiral William McRaven.)
+
+These challenges are often associated with those focused on outcomes and destinations.
+We can find motivation by bringing our immediate goals closer through smaller, consumable units of work.
+
+## Finding a sense of abandonment
+
+For those of us who cook our work with love, like our grandmother's most prized recipe, we must follow that recipe.
+It guides us to completion.
+It is critical to ensure that work has a clearly defined destination so that we can follow the steps to reach it.
+Without a beacon to keep us focused on the details of our work, we can get lost trying to make it perfect,
+which is often better than it needs to be.
+
+These challenges are often associated with those who need to focus more on where we are going and less on the journey itself.
+Providing clear acceptance criteria allows the definition of the work to provide a specification for healthy abandonment.
+We can motivate practitioners who struggle with emotional attachment to their work by reframing that attachment to the
+continuity or cycle rather than the outcome.
+For developers, it is less likely that they love their code and more likely that they love coding itself.
+
+
+With that said, I'm done.

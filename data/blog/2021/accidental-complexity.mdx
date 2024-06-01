@@ -1,0 +1,123 @@
+---
+Title: "Accidental Complexity"
+date: '2021-07-05'
+lastmod '2023-03-10'
+tags:['Architecture','Complexity','Distributed Systems','Testing','Behavior Driven Development','BDD','MDD','Monitor Driven Development','API']
+draft: false
+summary: 'Accidental complexity in software development arises from unnecessary processes and poor design choices. This article explores its impacts on productivity and offers strategies to reduce complexity, fostering more efficient and maintainable systems.'
+---
+
+Most modern software applications have no shortage of complexity. As components are split from each other to take advantage of distributed architectures, we find that the scope of uncertainty and possibility increases by orders of magnitude.
+
+"Information at our fingertips in the blink of an eye." That statement encompasses a vague storied requirement of many digital initiatives. Achieving the scale to reach these goals drives distributed architectures, exacerbating the complexity of those systems.
+
+To support the Mercurian demands of "we want it all, we want it now," the specialization of characteristics necessitated by architectural components becomes more heterogeneous. Evolutionarily speaking, the
+distribution of components only grows through the adolescence of technological innovation, increasing
+complexity.
+
+There are two types of complexity: _necessary complexity_ and _accidental complexity_.
+
+### Necessary complexity
+
+Necessary complexity is the basal complexity required to solve the problems we face. For instance, if I sort elements within a collection, I must evaluate every element. I can never have a solution more efficient than O(N) regarding time complexity.
+
+This particular example is relatively black and white. However, many problem domains aren't as easy to evaluate. There are circumstances like the Traveling Salesman or the Three Generals problem
+where the inputs are too numerous to calculate, or Byzantine cases. In addition to the problem itself, perhaps there are requirements concerning how it is solved. For instance, an application might require sufficient parallelism, so algorithms that provide optimal performance in a
+single-threaded solution would be less viable.
+
+Let's clarify the definition of necessary complexity in light of the weeds I've just mentioned.
+
+Architects rarely specify implementation details unless they are a critical aspect of the architecture. If I design an eCommerce site, I'll delegate ownership for the implementation details of searching through content to the development teams. Delegation of ownership doesn't preclude the participation of an architect. The exercise can still be a cooperative effort, providing an opportunity to coach and empower. Establishing relationships in this manner builds camaraderie, trust, and the potential to influence without authority.
+
+On the other hand, if I'm designing a search engine, I will be more involved in the search algorithms and implementation. Complexity drives engagement. We don't need to exhaustively evaluate every possible algorithm if we know that specific industry standards satisfy
+both the reasonable requirements of non-critical characteristics, as well as meet the demands dictated by the
+critical ones.
+
+We will rarely need to challenge the performance or attributes of existing algorithms. For the most part, software algorithms have reached a stage of maturity such that optimization creeps forward at a languid pace. For now, most performance gains come from the physical components driven by software instructions instead of the algorithms themselves.
+
+Despite the perspective of stagnance, there are advantages to this maturity. As algorithms mature, they become communication devices. These algorithms, data structures, and patterns are easier to study and understand. Common concepts allow the dissemination of software architecture effectively within and across engineering
+organizations. This ubiquity approaches a collective comprehensiveness towards a shared understanding, baselining the simplicity of
+the architectural solution.
+
+All else being equal, necessary complexity is the minimum amount of complexity required to solve a problem based
+on the available technology and resources at the time the issue needs to be solved while allowing the overall design and architecture to be understood by those who will implement it.
+
+### Accidental Complexity
+
+Accidental complexity is noise. It collects every aspect of a solution that makes it harder to understand, implement, deliver, or otherwise coalesce with the original intent. It is waste and a blocker to engineering effectiveness.
+
+Ideally, every dollar spent and minute allocated to the end goal would be constrained to solving the problem. Unfortunately, this is impossible. Just as electrical current gives off heat, there are unavoidable by-products of engineering.
+
+We must create tests to validate that a solution will address the problem. We have unit tests to ensure that the code works. We have acceptance tests that ensure that we are bound to acceptance criteria. Combined, we provide two principal characteristics of technical solutioning; build the thing right and build the right thing.
+
+Over the years, new paradigms have emerged to simplify testing. [Behavior Driven Development (BDD)](https://en.wikipedia.org/wiki/Behavior-driven_development) simplifies the
+syntax of acceptance tests so that the tests are constructed in language semantics similar to business requirements. Monitor Driven Development (MDD) provides a mechanism to continuously test a solution to ensure that it holistically and continuously fulfills the desired end goal. A well-thought-out test strategy provides temporal and aggregate dimensions for validation.
+
+Beyond testing, there are administrative and support factors such as monitoring, logging, admin access, and other operational activities. There
+are stages and tools involved with the software's release, delivery, and deployment. Evolutionary fitness functions ensure that development adheres to architectural constraints and guidelines.
+
+Developers and teams have created entire frameworks to support simplified paradigms. Much of the DevOps cultural phenomenon is
+focused on providing tools and augmentations that help reduce the noise generated by accidental complexity.
+
+One might argue that accidental complexity, in totality, is unavoidable. "What does it matter where the logic exists to support my solution?"
+
+It matters in terms of abstraction. Referring back to the nature of growing complexity as systems become more distributed, we have mechanisms to abate the complexity in the design of the software itself. API-driven development ensures the isolation of each module, service, or bounded context so that external consumers interact only with the semantics of the API. They only need to be concerned with the _what_. The _how_ is the responsibility of the services abstracted by the API.
+
+APIs provide a considerable amount of simplicity by hiding unruly details. As a consumer of an API, this allows me to budget my focus to a greater degree on the problem I'm trying to solve. I'll spend less time context-switching to alien component implementation, meaning I will spend less time delivering my piece of the solution. Abstraction improves my productivity, decreases the time to deliver, and inversely increases the release cycle's velocity. Coincident with the economy of time is the associative decrease in cost.
+
+Abstraction, as a function of work and day-to-day operations, consolidates the cost of delivering a product to the
+hands of customers.
+
+Most of this is intuitive. While there are thousands of pages in the form of books, articles, and blogs written in support of these ideas, one can come to the same conclusion with a cursory understanding of software
+development life cycles, business, and money management.
+
+Unfortunately, it is far more common to see companies negatively impacted by accidental complexity than to see them
+flourish with lean processes. In my experience, failure to right the ship comes from unhealthy ignorance and resistance to change. Incognizance is less a personality trait and more an accrual of emotional and procedural debt accumulated through the momentum built by impetuous decision-making.
+
+
+    "We don't have the time to fix it."
+
+    "We've sunk a lot of money and time into this solution."
+
+
+### Addressing the Accident
+
+If you expect a one-size-fits-all solution or a quicker picker-upper, you have yet to spend much time in the software game. It just doesn't work that way. There is no golden hammer, no silver bullet.
+
+However, a procedural framework exists in place of a skeleton key solution.
+
+First, we have to consider what causes accidental complexity.
+
+In many cases, I've found that companies opt to build their own test frameworks or tooling. Custom tooling is only a problem if the company skips the evaluation stage. If my business is an eCommerce site, it doesn't make much sense for me to build my own release and deployment pipeline. My customers are interested in something other than releasing software.
+
+It makes sense to evaluate existing solutions, then score that evaluation against the business requirements. There are cases where standard tools are too broad for some business cases. For example, products sold on retail sites like eBay and Amazon provide only cursory attributes. Industries like manufacturing or aftermarket parts are very nuanced, requiring more detail than generic solutions offer.
+
+However, in most cases, off-the-shelf software meets fundamental requirements. Industry-provided reusability offers considerable savings regarding time to market, supportability, and cost (especially if you choose open-source solutions.)
+
+There is no golden hammer, no silver bullet.
+
+OTS solutions are great, but like anything else, they have limitations. Community open-source solutions tend to have limited support, and there is often a hard ceiling concerning the supported scale of the solution.
+Evaluation efforts often need to pay more attention to many of these limitations. We must always look ahead. If the business expects or targets a given scale, these goals should always be a factor in our evaluations. At some point, we may have to change solutions, provide
+integration or customization code, or give a do-it-yourself (DIY) solution.
+
+Commercial OTS solutions are pay-to-play versions of open-source software. Subscribing to these services often includes an extended feature set not available to open source/community versions and support
+contracts. The cost of these solutions is usually the primary focus during evaluations, but I recommend looking deeper. Get on the phone and talk to someone. Watch a demo of the extended features. Research the support experience.
+
+I've dealt with vendors whose enterprise solutions were phenomenal and worth every penny. At the same time, I've dealt with vendors whose extended feature sets could easily be provided by internally developed integrations. It is worth noting that many enterprise solutions have a reputation for poor support—caveat emptor.
+
+Sometimes there aren't available tools, the existing tools need to meet your needs, or your requirements will conflict with what is available. (You also might be in direct competition with the tools!)
+
+In these cases, building your own or some hybrid solution of build and buy is required.
+
+That is ok. Flexible architectures are a necessity—technology changes at an alarming rate. Brittle designs intended to stand the test of time do so more often than not at great expense to the developers and the users. The least worst architectures are those that can evolve in a manner that is as painless and transparent as possible to the end users while being cost-effective and uneventful for the developers and architects who deliver them.
+
+Evolutionary architectures address accidental complexity in a temporally flexible fashion. What is good today might not be tomorrow. If we continuously test and measure the system, we will see
+the stress points long before the strain grows to failure. Canary-like signals allow us to navigate the complexity of our solution intelligently with thoughtful intent, minimizing the accidental nature of its complexity.
+
+Before I sail off into the wild blue yonder, I want to highlight the words of accidental complexity. Specifically, I want to focus on **accidental**. While ignorance and change resistance are obstacles in any
+organization, they aren't malicious problems. There are many reasons that organizations fall into these patterns, most of which are entirely valid. As of this writing, people write software. We are fallible, funny
+creatures. If we attempt to solve accidental complexity by treating it as willful misconduct or intended slight, we're more likely to worsen the problems.
+
+We must attempt to rectify challenges in our operational models with compassion, inclusivity, and understanding. It was "just an accident."
+
+We'll clean it up like spilled milk and pour a new glass. 

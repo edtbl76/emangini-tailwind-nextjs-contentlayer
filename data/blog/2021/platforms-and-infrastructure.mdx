@@ -1,0 +1,144 @@
+---
+title: "Platforms and Infrastructure"
+date: '2021-01-16'
+lastmod: '2023-02-10'
+tags: ['infrastructure', 'platform', 'platform thinking', 'digital platform', 'PaaS', 'IaaS']
+draft: false
+summary: 'Explore the critical role of platforms and infrastructure in driving innovation, efficiency, and scalability in modern technology ecosystems.'
+---
+
+Many non-technical stakeholders need help understanding the difference between platform and infrastructure.
+This misconception presents a risk to the success of a product.
+
+Let's start by setting some basic definitions.
+
+## Infrastructure
+
+[ITIL](https://www.axelos.com/certifications/itil-service-management/) provides an excellent pre-2000 definition of IT infrastructure.
+
+"All of the hardware, software, networks, and facilities that are required to develop, 
+test, deliver, monitor, manage and support IT services."
+
+
+
+## Platform
+
+Without actually doing any polls or collecting official data,
+I imagine that platform is probably one of the top 10 most overused and ambiguous terms in technology.
+
+This ambiguity is likely the root of the conflation and conflicts associated with its relationship to infrastructure:
+
+1. Many definitions of platform are derived from a definition of infrastructure.
+2. Some definitions of platform are presented as interchangeable with infrastructure.
+
+I've come up with a light definition:
+
+A platform is a framework consisting of software, systems,
+or middleware that allows users to construct something of value.
+
+## Differentiation
+
+Differentiating the terms can help untangle some of the challenges mentioned above. 
+Amberly Dressler (by way of Tom Murdock and Albert Barron) provides one of my favorite analogies: 
+[Pizza as a Service](https://www.optimizely.com/sv/insights/blog/pizza-as-a-service/)
+
+Infrastructure is foundational, consisting of the primary ingredients. 
+Regarding technology, these are pieces, components, and other nouns that describe a thing.
+
+**Infrastructure supports.**
+
+Earlier, I mentioned that most platform definitions are inherently derivative of an infrastructure explanation.
+Postel's Law (a.k.a the robustness principle) states,
+"be conservative in what you do, be liberal in what you accept from others."
+This principle is one of many good practices for API design.
+APIs provide capabilities to consumers through declarative verbs (i.e., commonly CRUD)
+to abstract the sequences of mixing ingredients to offer the published capabilities.
+
+Pizza-as-a-Service suggests that the platform capabilities are the oven, fire, electricity, and gas.
+When we use these capabilities, we can do so without having to understand the fundamental physical properties of fire,
+the details of the utilities (electric/gas), or the mechanical aspects of the oven.
+
+Platforms provide a way of taking raw materials and organizing them in a manner that accelerates work.
+Generalized platforms provide broad types of work,
+meaning we may have to perform additional effort to apply the platform to a specific use case.
+Conversely,
+specialized platforms narrowly approach certain use cases to provide a production-capable out-of-box experience.
+
+Platform enables.
+
+## X-as-a-Service
+
+IaaS (Infrastructure-as-a-Service) and PaaS (Platform-as-a-Service)
+are concepts that continue to become staples in technology as organizations flock to the cloud.
+
+X-as-a-Service distinguishes between what a cloud vendor manages and what the user manages.
+
+Before the cloud, there was no "-as-a-Service."
+It was very much like old televisions without remote controls.
+If we had to change the channels, it meant getting out of the chair.
+We managed everything.
+We had to understand everything.
+We had to staff for everything.
+
+Infrastructure-as-a-Service allows the vendor to assume responsibility for all loud servers,
+NoC locations, networking runs, and appliances.
+The concepts remain the same.
+We still provision servers, configure networks, and manage aspects of the infrastructure.
+IaaS insulates us from physical touch-points.
+We don't cut our fingers on the frustrating little nuts that fit into rack units,
+and we don't have to deal with ethernet cables that were measured a few inches too short.
+
+Platform-as-a-Service moves us a few miles up the road.
+IaaS gets us out of the server rooms;
+however, we are still working with the same basic units of infrastructure: storage, servers, and networking.
+
+Storage requires understanding RAID, 
+multipathing, file systems, recovery, various means of dynamic expansion,
+I/O characteristics, and communication protocols.
+Servers require operating systems, firmware updates, peripherals, drivers, and various software subsystems.
+Networking has a vast alphabet soup of protocols that comprises a seven-layer model (OSI) to sort out interconnectivity.
+
+IaaS may have taken our bodies out of the server rooms but left behind our brains.
+PaaS provides relief by providing a middling layer of capabilities.
+[Heroku](https://www.heroku) and many serverless platforms are great examples of PaaS.
+
+## Why does this matter?
+
+Effort. Time. Cost.
+
+I mentioned that understanding the difference between these terms was a critical aspect of the success of products.
+The difference defines the effort, time, and cost of being assigned to your organization.
+
+Many platforms can accelerate your business offerings if you work in a broad industry like MarTech or eCommerce.
+You are sharing a talent pool,
+and the industry's commoditization generally means there is feature parity across competitors.
+Businesses usually differentiate their products in non-functional means such as brand marketing and aesthetics.
+Infrastructure and platforms provide little lift in these areas, but cost reduction does.
+Several years ago, economizing OpEx provided a competitive advantage among businesses that struggled to do so.
+Yesterday's advantage is today's requirement.
+Companies in broad markets are far more likely to use PaaS (or SaaS) as much as possible to minimize their cost centers.
+
+Some organizations attempt to innovate service offerings in these broader markets to differentiate.
+Some opt to compete head-to-head, believing they have a game-changing approach that can disrupt the industry.
+Others contend by specialization through focusing on niche demographics in the industry.
+Platforms designed for broad strokes may not close the gap for specific applications.
+Organizations might be required to start from IaaS to develop their niche-specific platforms.
+They have to determine if the cost to do so is worth owning that customer base.
+
+Smaller markets allow more room for error.
+Head-to-head innovation poses less risk, assuming the market entry price is reasonable.
+The trade-offs remain mostly the same.
+However, in these smaller markets,
+it is less likely that platform offerings are available (commercial or open source) because the use case is sparse.
+This trend is consistent with most small markets.
+
+I hope
+this sheds some light on the differences between infrastructure and platforms and how a careful understanding can drive successful initiatives.
+
+## Postscript: Platform Thinking & Digital Platform
+
+The concept of a platform has a broader context than just technical capabilities.
+Thoughtworks has published content about platform-thinking, which shares a symbiotic relationship with a platform to
+maximize return on investment.
+We refer to the combination of the two
+operating in unison as a [Digital Platform](https://www.thoughtworks.com/en-us/what-we-do/enterprise-modernization-platforms-cloud/empc-hub).

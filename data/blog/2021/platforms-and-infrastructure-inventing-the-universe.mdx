@@ -1,0 +1,183 @@
+---
+title: 'Platforms and Infrastructure: Inventing the Universe'
+date: '2021-01-23'
+lastmod: '2023-02-17'
+tags: ['infrastructure', 'platform', 'cloud']
+draft: false
+summary: 'Learn how the convergence of platforms and infrastructure is revolutionizing the tech landscape, enabling unprecedented innovation and growth.'
+---
+
+This article is a continuation of my previous post about infrastructure and platforms. 
+I want to start by using memory models as an analogy for a platform.
+
+##  Memory Models
+
+A memory model is a concept or guarantee about a processor's architecture. 
+One of the common elements of a memory model is how it manages memory barriers,
+which are mechanisms responsible for guarantees associated with the visibility and order of tasks when sharing data.
+
+Unfortunately, this wasn't a standardized concept.
+Systems manufacturers used different semantics.
+Coding in low or mid-level languages (Assembly, C/C++) puts the developers responsible for managing different semantics.
+On the other hand,
+languages like Java could abstract away the semantics into the JVM based on the guarantees
+outlined in the [Java Memory Model](https://docs.oracle.com/javase/specs/jls/se17/html/jls-17.html#jls-17.4).
+
+The analogy is loose but deliberate.
+When coding in Java,
+there is a clear separation between code-level synchronization and the individual memory access semantics
+performed by the JVM.
+We must use specific keywords, structures, and techniques to inform the JVM how to proceed.
+Developers can move that code to JVMs that support different architectures without any necessary modification,
+even though the JVM may insert memory barriers in other locations or conventions across different systems.
+
+In terms of architecture, this idealistic platform supports placement on different infrastructures.
+
+At a higher level, many businesses offering software solutions have customers with prejudices in terms of technology.
+Some retail companies want their cloud expenditures to go to something other than Amazon,
+so they'd much rather do business with vendors like Microsoft or Google.
+Conversely, some industries fear vendor lock-in, so they prefer a multi-cloud approach.
+This path requires
+that their application be platform or infrastructure agnostic depending on the necessary depth of their tech stack.
+
+## A little history
+
+This analogy provides a subtext for platforms and infrastructure's history and evolution.
+Development teams often used low-level languages to develop and deliver applications provisioned directly to hardware.
+Before cloud computing,
+consumers would install software applications on a laptop or desktop and business applications on servers.
+
+Platform and infrastructure were the OS and the device, respectively.
+Development was easier for software applications that didn't require unique interaction with hardware or peripherals.
+The operating system provided all of the necessary abstraction.
+However, some businesses needed more horsepower, peripheral devices, or other non-standard capabilities.
+The OS sparingly offered capabilities for many of these extended requirements,
+leading to challenges for software providers.
+
+Interestingly enough,
+the problem space for those businesses is very similar to the problems and challenges of embedded device manufacturers,
+IoT, robotics, mobile devices, and wearable technologies.
+
+Testing is one of the most expansive challenges.
+Testing hardware is required to ensure that the software works.
+For consumer-level products,
+this became
+highly challenging because it meant testing most of the devices that would end up in the homes of the general public.
+Realistically, it isn't cost-effective for providers to test every device.
+
+There are various solutions to the problem.
+Apple provides a white-box solution that is the same path many embedded device manufacturers take.
+A closed approach to hardware support offers a theoretically high bar for quality, despite limitations to freedom.
+Consumers can only have the hardware features provided by the hardware the provider designs.
+
+Alternatively, device manufacturers often test Android (and its variants),
+providing their drivers and firmware to enable the platform to work with their hardware.
+
+Another challenge is hiring.
+Infrastructure skill sets included FPGA programmers, electrical engineers, and computer engineers.
+At the platform level, we had systems-level engineers typically doing some form of low/mid-level coding.
+However, while these skill sets were emerging, they were often performed by the same personnel.
+Vendors separated responsibilities only once they scaled out to the point that it made sense.
+
+With the onset of the web, businesses could reach more customers through fewer touch-points.
+Eventually, products became more complicated, requirements became more challenging,
+and demand required value to be delivered faster.
+More skill sets emerged.
+Whether or not the positions or skills were technology or product-facing became a triviality dependent upon the problem space of the specific business.
+
+## Reframing perspective on business problems
+
+### The simple cases
+
+Some business problems are simple,
+similar to early software programs that only needed to interact with the operating system.
+In these scenarios,
+we can use PaaS offerings
+or construct our own with open-source or commercial software that solves the low-hanging fruit.
+Our use case is vague under these conditions,
+so we reduce costs and focus more on solving the business problem by making a buy decision.
+
+Containerization provides a good example.
+Kubernetes continues to mature, and as such, it solves an increasing percentage of infrastructure problems.
+[In fact, the term "CaaS" has come to mean Containers-as-a-Service, which represents an ambiguous amalgam of platform and infrastructure that provides a third interesting circumstance to my previous article.] Kubernetes developers have made an incredible effort
+to provide good abstraction from infrastructure through projects like the CSI (Container Storage Interface) and CRI
+(Container Runtime Interface).
+
+While this drives some candidates and recruiters wild due to an increased scope of responsibilities for similar job titles,
+these products are a boon to businesses trying to cut costs.
+
+It is much less expensive to pay for an engineer to build Terraform manifests than for a larger team of engineers
+to write code that solves the same problems.
+Maintaining and updating those manifests is cheaper than maintaining and updating the code base.
+They're also more affordable to deliver.
+
+There is a growing surface of opportunities.
+Innovation has reduced the proverbial mountain into a molehill.
+Using the CSI and CRI above as examples, infrastructure might amount to a few lines in a configuration file.
+
+In many circumstances,
+external offerings solve the problems so efficiently that the business can manage its platform and infrastructure needs entirely through a small operations team.
+
+### The not-so-simple cases
+
+The opposite extreme is when conventional tools don't solve our problems sufficiently.
+The result is the need to build complicated systems.
+
+A great example of this is [Google Spanner](https://static.googleusercontent.com/media/research.google.com/en//archive/spanner-osdi2012.pdf).
+(This is an excellent read by the way.
+If you're interested in "the other" paper, it is here:
+[Calvin](http://cs.yale.edu/homes/thomson/publications/calvin-sigmod12.pdf).
+It's too bad Google 
+didn't name their report Hobbes).
+The power of the Spanner solution comes from the ability of Google
+to manage the in-house network infrastructure and have an exact observation of clock uncertainty
+(via the TrueTime API that exposes references to hardware clock).
+
+While modern Spanner derivatives like [YugaByteDB](https://www.yugabyte.com/) and [CockroachDB](https://www.cockroachlabs.com/) offer similar
+semantics and overarching designs,
+they offer a different degree of fidelity than Spanner and, therefore, can't provide the same level of consistency.
+
+Organizations have to staff entire organizations to commit to these efforts.
+Platform and infrastructure teams are almost always separate in such cases
+and tend to have further subdivisions specific to individual goals.
+
+These can be complex technical problems to solve, and from the business perspective, they are costly.
+Many of these concerns are familiar.
+Testing, as mentioned earlier, presents a challenge.
+If we have to test and release software that isn't directly related to the business logic, it becomes a source of waste.
+Organizations should economize business-supporting efforts (such as infrastructure) as much as possible.
+
+One of the most attractive benefits of making buy decisions is
+that the manufacturers of these solutions test their software
+and usually provide documentation on its performance characteristics.
+Naturally, there are risks we take that the testing is comprehensive enough to meet our needs,
+but that's part of the trade-off.
+
+### The in-between cases
+
+Unfortunately, Kubernetes, like other solutions, is still evolving.
+It has yet to solve every problem.
+Even the solutions it has provided sometimes provide them in a manner
+that fails to meet the acceptance criteria for your business's problem space.
+
+No solution is perfect, but there may be a happy medium.
+If Kubernetes gets us halfway there, that is still better than zero.
+If the work to close the gap is reasonable compared to the costs of using off-the-shelf software,
+then it is likely to provide a good foundation for solving the needs of the business.
+
+The in-between is where most of us end up
+because there is a vast set of possibilities surrounding how pre-baked tools can solve or not solve our problems.
+Perhaps, the infrastructure could be abstracted entirely, but we must build a platform to make that a reality.
+Maybe a little more, maybe a little less.
+
+In terms of building teams, scaling a company,
+and solving business problems, this is a more significant challenge than just solving for technology.
+
+---
+
+The challenges I've discussed only scratch the surface.
+As organizations navigate the trade-offs of various categories of platforms and infrastructure,
+it is wise to consider the advice of Carl Sagan -
+
+_"In order to make an apple pie from scratch, you must first invent the universe."_
+
