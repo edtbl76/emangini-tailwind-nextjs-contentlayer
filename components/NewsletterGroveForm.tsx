@@ -6,8 +6,8 @@ const NewsletterGroveForm: React.FC = () => {
     <Head>
       <script
         async
-        data-uid="0f15515414"
-        src="https://emangini.ck.page/0f15515414/index.js"
+        data-uid="576a6b3274"
+        src="https://emangini.ck.page/576a6b3274/index.js"
       ></script>
     </Head>
   )
