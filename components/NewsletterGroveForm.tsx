@@ -5,9 +5,9 @@ const NewsletterGroveForm: React.FC = () => {
   return (
     <div>
       <Script
-        src="https://emangini.ck.page/576a6b3274/index.js"
+        src="https://emangini.ck.page/14797806d2/index.js"
         strategy="lazyOnload"
-        data-uid="576a6b3274"
+        data-uid="14797806d2"
         async
       />
     </div>
