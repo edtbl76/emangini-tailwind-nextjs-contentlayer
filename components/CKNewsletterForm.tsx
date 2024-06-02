@@ -1,7 +1,7 @@
 import React from 'react'
 import Script from 'next/script'
 
-const NewsletterGroveForm: React.FC = () => {
+const CKNewsletterForm: React.FC = () => {
   return (
     <div>
       <Script
@@ -14,4 +14,4 @@ const NewsletterGroveForm: React.FC = () => {
   )
 }
 
-export default NewsletterGroveForm
+export default CKNewsletterForm
