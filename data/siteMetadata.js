@@ -5,7 +5,7 @@ const siteMetadata = {
   headerTitle: '@emangini',
   description:
     'This is where I unpack thoughts and research on technology, business and leadership. ' +
-    'No fluff, just the good stuff.',
+    '\nNo fluff, just the good stuff.',
   language: 'en-us',
   theme: 'system', // system, dark or light
   siteUrl: 'https://tailwind-nextjs-starter-blog.vercel.app',
