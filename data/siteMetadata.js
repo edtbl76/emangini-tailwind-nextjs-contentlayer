@@ -4,8 +4,7 @@ const siteMetadata = {
   author: 'Edward Mangini',
   headerTitle: '@emangini',
   description:
-    'This is where I unpack thoughts and research on technology, business and leadership. ' +
-    '\nNo fluff, just the good stuff.',
+    'This is where I unpack thoughts and research on technology, business and leadership.',
   language: 'en-us',
   theme: 'system', // system, dark or light
   siteUrl: 'https://tailwind-nextjs-starter-blog.vercel.app',
