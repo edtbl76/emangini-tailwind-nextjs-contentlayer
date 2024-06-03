@@ -21,6 +21,12 @@ const projectsData: Project[] = [
     href: 'https://devvocates.org',
   },
   {
+    title: 'Understanding GPT',
+    description: `This repository contains a comprehensive guide to understanding GPT (Generative Pre-trained Transformer) models, including detailed explanations, use cases, and implementation examples. Perfect for anyone looking to deepen their knowledge of AI and natural language processing.`,
+    imgSrc: '/static/images/gpt.png',
+    href: 'https://github.com/edtbl76/UnderstandingGPT',
+  },
+  {
     title: 'microdaddy',
     description: `This is an example of microservices on k8s. The commit history
     shows the journey through different time periods of service orientation. 
