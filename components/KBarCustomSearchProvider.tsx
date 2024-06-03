@@ -1,3 +1,5 @@
+'use client'
+
 import { useRouter } from 'next/navigation'
 import { KBarSearchProvider } from 'pliny/search/KBar'
 import { CoreContent } from 'pliny/utils/contentlayer'
