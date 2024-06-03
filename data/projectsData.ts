@@ -7,12 +7,18 @@ interface Project {
 
 const projectsData: Project[] = [
   {
+    title: 'this site!',
+    description: `No fluff, just the good stuff!`,
+    imgSrc: '/static/images/emangini-hero.png',
+    href: 'https://github.com/edtbl76/emangini-tailwind-nextjs-contentlayer',
+  },
+  {
     title: 'devvocates',
     description: `Devvocates uses open-source software to ensure equal tech 
     education and transparent governance, empowering communities and driving 
     positive societal and environmental impacts.`,
     imgSrc: '/static/images/devvocates.png',
-    href: 'https://devvocatres.org',
+    href: 'https://devvocates.org',
   },
   {
     title: 'microdaddy',
