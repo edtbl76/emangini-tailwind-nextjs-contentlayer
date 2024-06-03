@@ -7,8 +7,8 @@ const siteMetadata = {
     'This is where I unpack thoughts and research on technology, business and leadership.',
   language: 'en-us',
   theme: 'system', // system, dark or light
-  siteUrl: 'https://tailwind-nextjs-starter-blog.vercel.app',
-  siteRepo: 'https://github.com/edtbl76/tailwind-nextjs-starter-blog',
+  siteUrl: 'https://emangini.com',
+  siteRepo: 'https://github.com/edtbl76/emangini-tailwind-nextjs-contentlayer',
   //siteLogo: '/static/images/logo.png',
   socialBanner: '/static/images/twitter-card.png',
   //mastodon: 'https://mastodon.social/@mastodonuser',
