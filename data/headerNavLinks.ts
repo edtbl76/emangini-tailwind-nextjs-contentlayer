@@ -4,7 +4,7 @@ const headerNavLinks = [
   { href: '/tags', title: 'Tags' },
   { href: '/projects', title: 'Projects' },
   { href: '/about', title: 'About' },
-  { href: 'https://emangini.ck.page/home', title: 'Subscribe' },
+  // { href: 'https://emangini.ck.page/home', title: 'Subscribe' },
 ]
 
 export default headerNavLinks
