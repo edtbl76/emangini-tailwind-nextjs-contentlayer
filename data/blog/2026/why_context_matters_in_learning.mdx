@@ -1,0 +1,57 @@
+---
+title: 'Why Context Matters in Learning'
+date: '2026-01-13'
+lastmod: '2026-01-13'
+tags: ['learning', 'engineering culture', 'cognitive science', 'professional development'
+draft: false
+summary: 'This article explores how engineers and technical teams actually learn, drawing on cognitive science, adult education research, and real world engineering practice. Instead of teaching frameworks like software architecture, Agile, or Domain Driven Design in isolation, it shows why learning is most effective when it is embedded in real projects and real constraints. By connecting concepts to live problems, teams develop deeper understanding, retain knowledge longer, and change how they work. The piece is aimed at engineering leaders, consultants, and anyone responsible for building technical capability inside organizations.'
+authors: ['default']
+---
+
+Most attempts to teach technology inside companies start from the wrong place. We begin with frameworks. We schedule workshops on topics such as microservices, cloud-native architecture, Agile, DevOps, Team Topologies, or Domain-Driven Design. We present the models, the vocabulary, and the diagrams. Then we hope people will return to their desks and apply what they heard to their own messy, constrained reality.
+
+That hope is almost always disappointed. People nod in the room and then go right back to doing what they were doing before. Leaders interpret this as resistance or a lack of discipline. In reality, it is something much more basic. It is how human learning works.
+
+The human brain does not first store abstract systems. It stores situations. We remember incidents, failures, near misses, and moments when something went wrong or unexpectedly worked. Cognitive scientists call this case-based reasoning. We build understanding by comparing new situations to old ones that feel similar (Kolodner, 1993). That is why engineers can remember in detail a production outage from five years ago but struggle to recall the steps of a process they learned last quarter. The outage was a lived experience. The process was just information.
+
+When we teach technology as theory first, we ask people to form mental models without anything to anchor them. Terms like bounded context, microservice, platform team, or continuous delivery pipeline are just sounds until they map onto something that hurts or helps in real life. Without that grounding, the ideas float away.
+
+There is also a hard limit imposed by the brain itself. We have only a limited amount of working memory available for new material. Complex frameworks dump too many new elements on people at once, which causes overload and shallow learning (Sweller, Ayres, and Kalyuga, 2011). This is why someone can sit through a full day of architecture training and still be unable to explain how to apply any of it a week later. Their brain never had a chance to build stable structures for the information.
+
+The solution is not to make better slides. It is a better time.
+
+People learn when they are in the middle of a problem they cannot solve with their current tools. That moment creates attention and motivation. Educational psychologists call this a disorienting dilemma. It is when experience no longer fits your existing way of thinking that real learning opens the door (Mezirow, 1997). A team that keeps missing releases suddenly cares about continuous delivery. A product group that cannot get alignment suddenly wants to understand domain modeling. A data platform that keeps breaking under load becomes curious about distributed systems.
+
+At that point, frameworks stop being abstract. They become answers.
+
+This is not just theory. It is how expertise is built in every serious profession. Doctors do not learn medicine by memorizing anatomy in isolation. They learn by working through cases with real patients. Pilots do not learn to fly by reading manuals alone. They learn in simulators that replicate failure conditions. Apprentices in the trades learn by building real things under supervision. This is called situated learning. Knowledge sticks when it is learned in the same context in which it will be used (Lave and Wenger, 1991).
+
+Software is no different. We just keep pretending that it is.
+
+The same pattern appears in mathematics, which many people consider the purest example of abstract learning. In reality, mathematics is taught as a sequence of problems that force new tools into existence. Students do not learn algebra because someone decided it was time. They learn it because arithmetic breaks down when you try to solve problems with unknown values. They do not learn calculus because it is elegant. They learn it because geometry and algebra cannot adequately describe motion and change. Each abstraction is introduced only after simpler methods fail. This progression is not philosophical. It is how math education is structured in practice and why it works (National Research Council, 2001).
+
+Technology learning follows the same curve. You introduce distributed systems only after a single server collapses. You do not introduce DevOps until handoffs start to kill delivery. You do not introduce domain modeling until the data model becomes a liability.
+
+Yet in most organizations, we invert this. We run training first and wait for problems later. When the problems come, people do not recognize which tool applies because they never learned it in context.
+
+A better way is already sitting in front of us. We are surrounded by real engagements, real backlogs, real outages, real customer pain, and real organizational friction. Those are the nails. That is where learning should start.
+
+You take a live problem. You look at the constraints. You rule out the tools that do not fit. Then you teach the one that does. Now training and delivery happen at the same time. People are not memorizing concepts for some future use. They are using them immediately to make something better.
+
+This approach does more than improve learning. It changes how organizations think. Instead of frameworks driving work, work drives the frameworks. People stop arguing about what they should adopt in the abstract and start reasoning from evidence. That is what mature engineering cultures look like. They are not dogmatic. They are situational.
+
+If you want people to actually use what you teach them, stop starting with the theory. Start with the work. The rest will follow.
+
+---
+
+References
+
+Kolodner, J. L. (1993). Case based reasoning. Morgan Kaufmann.
+
+Lave, J., & Wenger, E. (1991). Situated learning: Legitimate peripheral participation. Cambridge University Press.
+
+Mezirow, J. (1997). Transformative learning: Theory to practice. New Directions for Adult and Continuing Education, 1997(74), 5 to 12.
+
+National Research Council. (2001). Adding it up: Helping children learn mathematics. National Academy Press.
+
+Sweller, J., Ayres, P., & Kalyuga, S. (2011). Cognitive load theory. Springer.
