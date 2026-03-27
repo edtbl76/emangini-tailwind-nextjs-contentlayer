@@ -20,13 +20,14 @@ export default function TOC({ toc, fromHeading = 1, toHeading = 6, exclude = '' 
   function renderItems(items: TocEntry[], depth: number): React.ReactNode {
     return items
       .filter((item) => item.depth >= fromHeading && item.depth <= toHeading)
-      .filter((item) => !excludeList.some((ex) => ex && item.title.toLowerCase().includes(ex.toLowerCase())))
+      .filter(
+        (item) =>
+          !excludeList.some((ex) => ex && item.title.toLowerCase().includes(ex.toLowerCase()))
+      )
       .map((item) => (
         <li key={item.url}>
           <a href={item.url}>{item.title}</a>
-          {item.items && item.items.length > 0 && (
-            <ul>{renderItems(item.items, depth + 1)}</ul>
-          )}
+          {item.items && item.items.length > 0 && <ul>{renderItems(item.items, depth + 1)}</ul>}
         </li>
       ))
   }

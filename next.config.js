@@ -52,7 +52,7 @@ class VeliteWebpackPlugin {
       if (VeliteWebpackPlugin.started) return
       VeliteWebpackPlugin.started = true
       const { build } = await import('velite')
-      await build({ watch: compiler.options.watch, clean: true })
+      await build({ watch: compiler.options.watch, clean: false })
     })
   }
 }
