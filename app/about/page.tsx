@@ -14,7 +14,7 @@ export default function Page() {
   return (
     <>
       <AuthorLayout content={mainContent}>
-        <MDXContent code={author.body.code} />
+        <MDXContent code={author.body} />
       </AuthorLayout>
     </>
   )

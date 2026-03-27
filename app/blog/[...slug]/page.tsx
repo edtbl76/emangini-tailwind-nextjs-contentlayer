@@ -1,6 +1,6 @@
 import 'css/prism.css'
 import 'katex/dist/katex.css'
-import { components } from '@/components/MDXComponents'
+
 import MDXContent from '@/components/MDXContent'
 import { allCoreContent, coreContent, sortPosts } from '@/lib/content-utils'
 import { blogs, authors } from '@/content'
@@ -75,16 +75,16 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
   const next = sortedCoreContents[postIndex - 1]
   const post = blogs.find((p) => p.slug === slug) as Blog
   const authorList = post?.authors || ['default']
-  const authorDetails = authorList.map((author) => {
-    const authorResult = authors.find((p) => p.slug === author)
-    return coreContent(authorResult as Authors)
-  })
+  const authorDetails = authorList
+    .map((author) => authors.find((p) => p.slug === author))
+    .filter((a): a is Authors => a !== undefined)
+    .map((a) => coreContent(a))
   const mainContent = coreContent(post)
-  const Layout = layouts[post.layout as keyof typeof layouts || defaultLayout]
+  const Layout = layouts[(post.layout as keyof typeof layouts) || defaultLayout]
 
   return (
     <Layout content={mainContent} authorDetails={authorDetails} next={next} prev={prev}>
-      <MDXContent code={post.body.code} components={components} toc={post.toc} />
+      <MDXContent code={post.body} toc={post.toc} />
     </Layout>
   )
 }

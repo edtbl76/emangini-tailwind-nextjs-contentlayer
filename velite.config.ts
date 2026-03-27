@@ -42,14 +42,15 @@ const blogs = defineCollection({
       raw: s.raw(),
     })
     .transform((data, { meta }) => {
-      // NOTE: Velite's transform context shape — use `meta.path` if the second
-      // argument destructures as `{ meta }`, or `data._meta.path` if Velite
-      // exposes _meta directly on data. The Step 2 verification will confirm which.
       const { raw, ...rest } = data
+      // meta.path is the absolute file path; derive relative path from data root
+      const relativePath = meta.path
+        .replace(path.join(root, 'data') + '/', '')
+        .replace(/\.mdx?$/, '')
       return {
         ...rest,
-        slug: meta.path.replace(/^blog\//, ''),
-        path: meta.path,
+        slug: relativePath.replace(/^blog\//, ''),
+        path: relativePath,
         readingTime: readingTime(raw),
       }
     }),
@@ -71,11 +72,16 @@ const authors = defineCollection({
       layout: s.string().optional(),
       body: s.mdx(),
     })
-    .transform((data, { meta }) => ({
-      ...data,
-      slug: meta.path.replace(/^authors\//, ''),
-      path: meta.path,
-    })),
+    .transform((data, { meta }) => {
+      const relativePath = meta.path
+        .replace(path.join(root, 'data') + '/', '')
+        .replace(/\.mdx?$/, '')
+      return {
+        ...data,
+        slug: relativePath.replace(/^authors\//, ''),
+        path: relativePath,
+      }
+    }),
 })
 
 export default defineConfig({
@@ -85,7 +91,7 @@ export default defineConfig({
     assets: 'public/static',
     base: '/static/',
     name: '[name]-[hash:6][ext]',
-    clean: true,
+    clean: false,
   },
   collections: { blogs, authors },
   mdx: {
