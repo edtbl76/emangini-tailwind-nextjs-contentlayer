@@ -63,6 +63,8 @@ All pliny imports are replaced with custom equivalents or deleted outright. The 
 
 **Removed from schema:** `tags`, `draft`, `structuredData`, `filePath`, `canonicalUrl`
 
+**Draft removal note:** Draft support is removed entirely by dropping the `draft` field from the schema. Any `.filter(p => !p.draft)` call sites in page files must also be removed — no separate files need to be deleted.
+
 ### Authors Collection Schema
 
 All fields `s.string().optional()` except `name` (`s.string()` required): `name`, `avatar`, `occupation`, `company`, `email`, `twitter`, `linkedin`, `github`, `layout`. Computed: `slug`, `path`.
@@ -88,9 +90,13 @@ Replaces `pliny/utils/contentlayer`. Exports:
 - `coreContent(post)` — strip `body` from a single post
 - `CoreContent<T>` — type alias `Omit<T, 'body'>`
 
+### `velite.config.ts`
+
+The core Velite configuration file. Defines `blogs` and `authors` collections using `defineCollection`, configures the MDX plugin pipeline (see schema tables above), and exports the config via `defineConfig`. The `blogs` collection uses a `transform` function to compute `readingTime`, `slug`, and `path` from each document's `_meta`.
+
 ### `components/MDXContent.tsx`
 
-Replaces `pliny/mdx-components` `MDXLayoutRenderer`. Velite compiles MDX to an executable JavaScript string at build time (trusted, not user input). This component evaluates that build-time string against the React JSX runtime to produce the rendered component tree. Accepts `code: string` and `components: MDXComponents` props — identical call signature to what layouts already use.
+Replaces `pliny/mdx-components` `MDXLayoutRenderer`. Uses Velite's `useMDXComponent` hook (from `velite/client`) to turn Velite's compiled MDX `code` string into a renderable React component. Accepts `code: string` and `components: MDXComponents` props — identical call signature to what layouts already use.
 
 ### `components/TOC.tsx`
 
@@ -108,6 +114,7 @@ Replaces `pliny/ui/Pre`. Client component wrapping `<pre>` with a copy-to-clipbo
 |---|---|
 | `contentlayer.config.ts` | Replaced by `velite.config.ts` |
 | `app/tags/` (entire directory) | Tag system removed |
+| `app/tag-data.json` | Tag count artifact — tag system removed |
 | `app/api/newsletter/route.ts` | Newsletter removed |
 | `components/KBarCustomSearchProvider.tsx` | Search removed |
 | `components/SearchButton.tsx` | Search removed |
@@ -134,6 +141,7 @@ Replaces `pliny/ui/Pre`. Client component wrapping `<pre>` with a copy-to-clipbo
 | `layouts/AuthorLayout.tsx` | Update type import; swap `MDXLayoutRenderer` → `MDXContent` |
 | `layouts/ListLayout.tsx` | Update imports; remove tag rendering |
 | `components/MDXComponents.tsx` | Replace `TOCInline` / `Pre` / `BlogNewsletterForm` with custom components |
+| `components/Header.tsx` | Remove `SearchButton` import and render call |
 | `components/ScrollTopAndComment.tsx` | Strip comment-scroll button; keep scroll-to-top only |
 | `siteMetadata.js` | Remove `analytics`, `comments`, `search`, `newsletter` keys; remove `PlinyConfig` type annotation |
 
@@ -142,13 +150,16 @@ Replaces `pliny/ui/Pre`. Client component wrapping `<pre>` with a copy-to-clipbo
 ## Dependency Changes
 
 **Remove:**
-- `contentlayer`
+- `contentlayer` (original, present in package.json alongside the fork)
 - `contentlayer2`
 - `next-contentlayer2`
 - `pliny`
 
 **Add:**
 - `velite`
+
+**Already present (no action needed):**
+- `reading-time` — already in `dependencies`, used by the `readingTime` transform in `velite.config.ts`
 
 ---
 
