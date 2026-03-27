@@ -8,7 +8,10 @@ import tagData from 'app/tag-data.json'
 import { genPageMetadata } from 'app/seo'
 import { Metadata } from 'next'
 
-export async function generateMetadata({ params }: { params: { tag: string } }): Promise<Metadata> {
+export async function generateMetadata(props: {
+  params: Promise<{ tag: string }>
+}): Promise<Metadata> {
+  const params = await props.params
   const tag = decodeURI(params.tag)
   return genPageMetadata({
     title: tag,
@@ -25,13 +28,13 @@ export async function generateMetadata({ params }: { params: { tag: string } }):
 export const generateStaticParams = async () => {
   const tagCounts = tagData as Record<string, number>
   const tagKeys = Object.keys(tagCounts)
-  const paths = tagKeys.map((tag) => ({
+  return tagKeys.map((tag) => ({
     tag: encodeURI(tag),
   }))
-  return paths
 }
 
-export default function TagPage({ params }: { params: { tag: string } }) {
+export default async function TagPage(props: { params: Promise<{ tag: string }> }) {
+  const params = await props.params
   const tag = decodeURI(params.tag)
   // Capitalize first letter and convert space to dash
   const title = tag[0].toUpperCase() + tag.split(' ').join('-').slice(1)
