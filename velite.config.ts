@@ -7,6 +7,7 @@ import rehypeSlug from 'rehype-slug'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypeKatex from 'rehype-katex'
 import rehypeCitation from 'rehype-citation'
+import rehypeRaw from 'rehype-raw'
 import rehypePrismPlus from 'rehype-prism-plus'
 import rehypePresetMinify from 'rehype-preset-minify'
 import { fromHtmlIsomorphic } from 'hast-util-from-html-isomorphic'
@@ -97,6 +98,18 @@ export default defineConfig({
   mdx: {
     remarkPlugins: [remarkGfm, remarkMath, remarkCodeTitles],
     rehypePlugins: [
+      [
+        rehypeRaw,
+        {
+          passThrough: [
+            'mdxjsEsm',
+            'mdxJsxFlowElement',
+            'mdxJsxTextElement',
+            'mdxFlowExpression',
+            'mdxTextExpression',
+          ],
+        },
+      ],
       rehypeSlug,
       [
         rehypeAutolinkHeadings,

@@ -45,8 +45,10 @@
     "yarn": "^1.22.22"
   },
   "devDependencies": {
+    "@babel/runtime": "^7.29.2",
     "@svgr/webpack": "^8.0.1",
     "@types/mdx": "^2.0.12",
+    "@types/node": "^25.5.0",
     "@types/react": "^18.2.73",
     "@typescript-eslint/eslint-plugin": "^6.1.0",
     "@typescript-eslint/parser": "^6.1.0",
