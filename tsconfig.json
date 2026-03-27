@@ -21,7 +21,7 @@
       "@/data/*": ["data/*"],
       "@/layouts/*": ["layouts/*"],
       "@/css/*": ["css/*"],
-      "contentlayer/generated": ["./.contentlayer/generated"]
+      "@/content": ["./.velite"]
     },
     "plugins": [
       {
@@ -37,8 +37,7 @@
     "**/*.ts",
     "**/*.tsx",
     "**/*.json",
-    ".contentlayer/generated",
-    ".contentlayer/generated/**/*.json",
+    ".velite",
     ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
