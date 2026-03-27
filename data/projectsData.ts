@@ -1,8 +1,8 @@
 interface Project {
-  title: string,
-  description: string,
-  href?: string,
-  imgSrc?: string,
+  title: string
+  description: string
+  href?: string
+  imgSrc?: string
 }
 
 const projectsData: Project[] = [
@@ -11,6 +11,22 @@ const projectsData: Project[] = [
     description: `No fluff, just the good stuff!`,
     imgSrc: '/static/images/emangini-hero.png',
     href: 'https://github.com/edtbl76/emangini-tailwind-nextjs-contentlayer',
+  },
+  {
+    title: 'STUD.io ControlRoom',
+    description: `ControlRoom is a private studio asset management application for cataloging and organizing recording studio gear,
+  plugins, and sample libraries. The frontend is built on Next.js (App Router) with TypeScript, TanStack Query for
+  server-state management and infinite scroll pagination, TanStack Table for virtualized data grids with per-column filtering
+  and resizable columns, Tailwind CSS and shadcn/ui for styling, and Playwright for end-to-end testing. The backend is FastAPI
+   with asyncpg for async PostgreSQL access, Pydantic for schema validation, python-jose for JWT auth, and OpenPyxl for xlsx
+  import/export with dropdown validation. PostgreSQL handles full-text search via tsvector/websearch_to_tsquery, soft deletes,
+   a full audit log, and UUID array columns for multi-entity associations. The entire stack runs in Docker Compose. Features
+  include paginated/filterable/sortable tables, hardware model associations with inline detail overlays, per-record audit
+  history with undo, bulk editing, cross-table full-text search, role-based access control, Google SSO, xlsx import/export
+  with template generation, and database backup/restore with integrity verification. The frontend communicates exclusively
+  through a Next.js BFF proxy that holds the JWT in an httpOnly cookie, keeping the backend URL and credentials off the client
+   entirely`,
+    href: 'https://github.com/edtbl76/stud.io',
   },
   {
     title: 'Algopedia',
