@@ -17,7 +17,9 @@ export default function Projects() {
           </p>
         </div>
         <div className="py-12">
-          <ProjectList projects={projectsData} />
+          <ProjectList
+            projects={[...projectsData].sort((a, b) => a.title.localeCompare(b.title))}
+          />
         </div>
       </div>
     </>
