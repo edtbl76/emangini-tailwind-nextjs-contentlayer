@@ -2,7 +2,7 @@ import ListLayout from '@/layouts/ListLayout'
 import { allCoreContent, sortPosts } from '@/lib/content-utils'
 import { blogs } from '@/content'
 
-const POSTS_PER_PAGE = 5
+const POSTS_PER_PAGE = 12
 
 export const generateStaticParams = async () => {
   const totalPages = Math.ceil(blogs.length / POSTS_PER_PAGE)

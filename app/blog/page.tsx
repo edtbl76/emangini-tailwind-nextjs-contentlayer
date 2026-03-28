@@ -3,7 +3,7 @@ import { allCoreContent, sortPosts } from '@/lib/content-utils'
 import { blogs } from '@/content'
 import { genPageMetadata } from 'app/seo'
 
-const POSTS_PER_PAGE = 5
+const POSTS_PER_PAGE = 12
 
 export const metadata = genPageMetadata({ title: 'Blog' })
 
