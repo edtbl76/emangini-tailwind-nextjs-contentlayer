@@ -47,9 +47,12 @@ export default function Home({ posts }) {
                             </Link>
                           </h2>
                         </div>
+                        {/* Summary display removed for simpler UX/UI.
+                            Re-enable by uncommenting the block below.
                         <div className="prose max-w-none text-gray-500 dark:text-gray-400">
                           {summary}
                         </div>
+                        */}
                       </div>
                       <div className="text-base font-medium leading-6">
                         <Link
