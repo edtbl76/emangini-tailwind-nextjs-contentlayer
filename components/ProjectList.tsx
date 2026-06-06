@@ -8,10 +8,11 @@ interface Project {
   title: string
   description: string
   href?: string
+  liveSrc?: string
   imgSrc?: string
 }
 
-function ProjectRow({ title, description, href, imgSrc }: Project) {
+function ProjectRow({ title, description, href, liveSrc, imgSrc }: Project) {
   const [open, setOpen] = useState(false)
 
   return (
@@ -50,15 +51,26 @@ function ProjectRow({ title, description, href, imgSrc }: Project) {
             </div>
           )}
           <p className="prose max-w-none text-gray-500 dark:text-gray-400">{description}</p>
-          {href && (
-            <Link
-              href={href}
-              className="mt-3 inline-block text-base font-medium leading-6 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-              aria-label={`Link to ${title}`}
-            >
-              View project &rarr;
-            </Link>
-          )}
+          <div className="mt-3 flex flex-wrap gap-4">
+            {href && (
+              <Link
+                href={href}
+                className="text-base font-medium leading-6 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                aria-label={`GitHub repository for ${title}`}
+              >
+                View project &rarr;
+              </Link>
+            )}
+            {liveSrc && (
+              <Link
+                href={liveSrc}
+                className="text-base font-medium leading-6 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                aria-label={`Live site for ${title}`}
+              >
+                Live site &rarr;
+              </Link>
+            )}
+          </div>
         </div>
       )}
     </li>
