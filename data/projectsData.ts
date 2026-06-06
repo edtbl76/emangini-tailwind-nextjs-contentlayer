@@ -2,6 +2,7 @@ interface Project {
   title: string
   description: string
   href?: string
+  liveSrc?: string
   imgSrc?: string
 }
 
@@ -26,6 +27,23 @@ const projectsData: Project[] = [
   through a Next.js BFF proxy that holds the JWT in an httpOnly cookie, keeping the backend URL and credentials off the client
   entirely`,
     href: 'https://github.com/edtbl76/stud.io',
+  },
+  {
+    title: 'Weyland AI/Harness Engineering Lab',
+    description: `Weyland AI/Harness Engineering Lab is a self-hosted, multi-node AI platform for engineering and experimentation
+    with LLMs, vector databases, graph databases, and data pipelines. The stack spans local LLM inference, embedding generation,
+    workflow automation, and Kubernetes (K3s)-managed services.`,
+    href: 'https://github.com/edtbl76/weyland-lab',
+  },
+  {
+    title: 'MIDI Real Book',
+    description: `MIDI Real Book is a Progressive Web App (PWA) and ensemble reference database cataloging 141+ musical groups
+    across jazz, rock, fusion, soul, and classical eras. Each entry covers player profiles, historical timelines, gear, and key
+    recordings. Built with Eleventy 3.x and Nunjucks templating, deployed on Firebase Hosting via GitHub Actions CI/CD, with a
+    versioned service worker enabling full offline access after first visit. Python handles automated PWA icon generation using
+    Pillow and CairoSVG.`,
+    href: 'https://github.com/edtbl76/midi_real_book',
+    liveSrc: 'https://midi-real-book.web.app/',
   },
   {
     title: 'Algopedia',
