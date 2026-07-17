@@ -1,0 +1,296 @@
+---
+title: 'Harness Engineering: The Devil is in Your Details'
+date: '2026-07-17'
+lastmod: '2026-07-17'
+tags: ["AI", "Harness Engineering", "AI Adoption", "Software Engineering", "Developer Productivity", "Leadership"]
+draft: false
+summary: 'Coding agents are real, and they are over-marketed, and those are not contradictions. This grey paper measures the gpa, then shows that the industry standardized the asy layer and called the disciplines solved. What you can buy, a file format, a hire, a platform, is the cheap, transferable artifact. What actually creates value, your failure history, your judgment, your organization's learning, cannot be bought at any scale. The devil is in the details, and the details are yours and yours alone.'
+authors: ['default']
+---
+
+Harness Engineering: The Devil is in _Your_ Details
+
+---
+
+Preamble
+
+What this paper is
+
+I want to tell you what you are reading before I try to convince you of anything, because the genre is part of the argument.
+
+This is not a white paper. A white paper is a document that wears the costume of neutral authority while it does the work of advocacy. It began, a century ago, as a government instrument, the authoritative report, the less-extensive companion to a blue book, and somewhere in the 1990s it was quietly repurposed into a sales tool that still dresses like a government report (Purdue OWL, n.d.; White paper, n.d.). That inheritance is the whole trick. The form says “disclosure.” The purpose says “buy.” Most of what you will read about AI this year is, I would argue, a white paper in that sense, whether or not it calls itself one.
+
+So I am calling this a grey paper instead, and I owe you a definition because the term is not settled. Search for it, and you will mostly find a specification with a grey background (Wood, 2024). “Grey literature,” with a space, is the term that actually has a definition: writing produced outside commercial publishing, not filtered through traditional peer review, which, by the field’s own reckoning, already includes white papers as an example (Grey literature, n.d.). That last fact is the useful one. A white paper is already grey literature. So the distinction I care about is not grey versus not. It is a distinction inside grey literature, and it runs on one axis: not who published it, but what it is trying to do for you.
+
+Here is the definition I will hold myself to. A grey paper is what a white paper approaches as its commercial intent falls to zero and its disclosed uncertainty rises to one. At that mathematical limit, the costume of neutral authority becomes actual neutral authority, because there is nothing left to sell. The white paper asserts the conclusion it was built to reach. The grey paper discloses what it does not know, including about itself. It is constructive authenticity: constructive because it means moving the work forward rather than merely doubting it, and authentic because it trades performance for transparency and radical candor.
+
+I cannot certify that stance by category. Independence is not something you claim; it is something you show. So this paper shows it. Every load-bearing claim traces to a primary source I read, or it is labeled as my own argued judgment and not dressed as data. Where I could not reach a primary, I say so. And at the end, in an appendix, I tell you what happened when I applied that same discipline to the literature on this very subject, because what happened is itself evidence. The short version: six foundational pieces, and every one of them had at least one widely repeated claim that the source does not actually support. One named trade publication printed a quote its subject never said. The field’s origin story is wrong. I will show my work.
+
+That appendix is not throat-clearing. It is the argument in miniature. This paper is about the difference between what can be bought and what has to be built, and the first casualty of that difference is the citation you took on trust.
+
+How I define things
+
+One more piece of scaffolding, then we begin.
+
+You will notice I do not hand you crisp definitions of agent, harness, or harness engineering and move on. I approach them instead. This is deliberate, not evasion. The central claim of this paper is that the value in this field lives in local, perishable detail that does not transfer. If that is true of the work, it is true of the words for the work. A tidy glossary would contradict the thing the glossary was defining.
+
+So I borrow a lens and want to call it a borrowed lens rather than dress it up as mathematics, which it is not. In classical logic, a thing is either in a set or out of it. In fuzzy set theory, membership is a matter of degree, somewhere between zero and one (Zadeh, 1965). I am going to treat the key terms that way, because the honest answer to “is this thing an agent” is often “partly, along this axis, to this degree.” And I am going to treat each published definition not as the definition but as a tangent line: locally accurate near the case its author had in front of them, and increasingly wrong as you travel away from it. The real meaning is the curve those tangents only ever touch. No single one of them is the curve itself.
+
+Two examples, since abstraction earns nothing on its own.
+
+Take agent. Anthropic draws a hard line: workflows run on “predefined code paths,” while agents “dynamically direct their own processes and tool usage” (Schluntz & Zhang, 2024). OpenAI’s SDK calls agents, more plainly, “LLMs equipped with instructions and tools” (OpenAI, n.d.). Both are useful. Neither is final, because the boundary they are drawing is not a wall; it is a gradient. A fixed three-stage pipeline is, by strict definition, a workflow, and yet the model within one of its stages, choosing its own next move, behaves like an agent. It is not agent or not-agent. The disagreement in the literature is not a contradiction to resolve. It is a degree being forced through a gate with only two settings: agent or workflow.
+
+Take harness. Viv Trivedy, who I will argue has the strongest claim to naming this whole thing, defines it by subtraction: “A harness is every piece of code, configuration, and execution logic that isn’t the model itself” (Trivedy, 2026). Birgitta Böckeler independently arrives at the same shape: “everything in an AI agent except the model itself” (Böckeler, 2026). That is a clean core. But the same word is used elsewhere in the same discourse to refer to a specific runtime component a vendor ships you (OpenAI, n.d.). Same five letters, two very different scopes. I will not pretend that ambiguity away. I will point at it, because it is a small live specimen of the larger problem: even the vocabulary has not consolidated where people assume it has.
+
+That is the method. Approach, do not pin. Now the argument.
+
+---
+
+Part I: The over-marketing, measured
+
+Let me start with the two numbers that made me want to write this.
+
+Within the same span of months, two well-resourced groups measured the return on enterprise AI and reached conclusions that differed by roughly 70 points. MIT’s Project NANDA, which reviewed more than 300 initiatives, reported that 95% of organizations were “getting zero return” from generative AI, which is to say that only about 5% saw one (MIT Project NANDA, 2025). Google Cloud, surveying thousands of leaders, reported that 74% saw a return on their AI investment in the first year (Google Cloud, 2025). Same technology. Same calendar. Opposite verdicts.
+
+The instinct is to pick a side. Resist it. The gap is neither a contradiction nor noise. The gap is the focus of this paper because it is almost entirely methodological. One study went and measured outcomes. The other asked people how they felt. When you measure the outcome, only about 5% of these efforts show a return. When you survey the feeling, 74% do. The distance between measured and reported is not a footnote to the AI story. It is the AI story.
+
+I want to be careful here, because I am about to spend a whole paper being skeptical, and skepticism has its own way of lying. So, before I use either number, I am going to tell you how each one is softer than its headline suggests.
+
+MIT’s 95% is real, but it is narrow. It measures custom enterprise builds, the bespoke tools companies commission for themselves, and on that population, most did not reach production. The same report found that general-purpose tools, the ChatGPTs and Copilots people already use, reached implementation around 83% of the time and worked fine. “95% of AI fails” is a misreading. “95% of custom enterprise builds showed no measured return” is the claim, and even then, zero measured return is not the same as value destroyed. Quote it any harder than that, and you have joined the people I am criticizing.
+
+The individual-scale version of this gap is sharper still, and it is the finding that convinced me the perception problem is structural rather than incidental. METR ran a randomized controlled trial with 16 experienced open-source developers working real issues in their own mature repositories, the kind with millions of lines and years of history. The developers expected AI to speed them up by 24%. Outside observers expected more; economics experts guessed 39%. The measured result was that developers were 19% slower with the AI tools. And here is the part that should unsettle anyone who plans by gut: even after finishing and having lived through the slowdown, the developers still believed they had been sped up by about 20% (Becker et al., 2025). Perception did not merely miss the truth. It inverted it, and stayed inverted after contact with the evidence.
+
+That is the whole disease in one experiment. But the same discipline that makes the finding powerful requires me to keep the number honest. In a February 2026 update, METR stood by the 19% while cautioning that it was measured on early-2025 tools and need not describe today’s, and reported that its own attempt to re-measure current productivity was confounded by selection effects, with developers declining tasks they would not have taken on without AI (METR, 2026). The honest reading is not that the slowdown was debunked, but that clean measurement here is hard, and the ground keeps moving. Anyone who quotes the 19% as a fixed, universal fact is doing the very thing the study warns against. The point was never that AI makes developers slower. The point is that the people using it, including experts, are unreliable narrators of their own productivity, even after the fact. That is true whether the real number is -19 or +30.
+
+Now let me turn the skepticism around: a paper that cites only the disappointing numbers is a white paper for the other team.
+
+The value is real. A randomized trial of GitHub Copilot found that developers completed a bounded task about 56% faster (Peng et al., 2023). DORA’s 2025 research, across roughly 5,000 professionals, found 90% adoption and a positive relationship with throughput since the prior year, the strongest signal in the corpus that the tooling is genuinely maturing rather than merely spreading (DORA, 2025). Coding agents are not a hoax. Something is happening, and it is worth money.
+
+What is being over-marketed is not the technology. It is a specific and seductive promise layered atop the technology: the promise of turnkey, transferable value. The claim that you can buy the outcome. And when you go looking for that promise in the independent evidence, it thins out. Gartner projects that more than 40% of agentic AI projects will be canceled by the end of 2027 and describes an industry rife with “agent washing,” in which only around 130 vendors offer anything genuinely agentic (Gartner, 2025). When the team at Answer.AI actually sat down with a heavily marketed autonomous coding agent and gave it 20 real tasks, it succeeded in 3 (Husain et al., 2025). The demos outran the reality, on the record, in public.
+
+And the promise has a cost that the “X percent faster” numbers never include. DORA found delivery instability rising alongside adoption. GitClear, looking at more than 200 million changed lines, found that duplicated code was rising and refactoring was falling, with 2024 the first year in which copy-pasted lines exceeded moved ones (Harding, 2025). Veracode found that 45% of AI-generated samples failed security tests and that newer, larger models were no more secure than older, smaller models (Veracode, 2025). Each of these carries a vendor’s interest or a correlational caveat, and I use them only as directional. But the direction is consistent, and it points at a bill that arrives later, after the speed has been booked as a win.
+
+So: real, and over-marketed. Both. The technology works. The promise that you can purchase its value without building anything yourself is the part that does not survive measurement. Hold that thought, because the rest of this paper is about why the building cannot be skipped, at three different scales, and what that means for the code you write, the people you hire, and the company you are trying to change.
+
+---
+
+Part II: What transfers, and what cannot
+
+Here is where a lesser version of this paper would overreach, so let me concede the strongest argument against myself before I make my case. I would rather lose the easy version of my thesis on my own terms than have you dismantle it on yours.
+
+The interface is consolidating. Fast. Formally. On the ninth of December 2025, the Linux Foundation launched the Agentic AI Foundation, with OpenAI, Anthropic, and Block as founding contributors and AWS, Google, Microsoft, Bloomberg, and Cloudflare among its members, and those companies donated the emerging shared plumbing: the AGENTS.md convention, the Model Context Protocol, the Goose framework (Linux Foundation, 2025). AGENTS.md alone is read by more than 60,000 open-source projects across 25+ tools (agents.md, 2025). This is real standardization, and it happened faster than the equivalent consolidation in most established engineering disciplines. Any thesis that pretends this is not happening is lying to you, and I am not going to insult the ones who noticed.
+
+But notice what consolidated. The container. The file format, the wire protocol, the vocabulary. The envelope everyone agreed to use for their letters. And an envelope is not a letter.
+
+This is the distinction the whole paper turns on, so I will be precise about it. There are two layers here, and they are being sold as one. The first layer is the interface: the format of an AGENTS.md file, the shape of a tool call, the words we use. That layer is converging, and should. The second layer is the content: which instructions actually work in your codebase, against your failures, for this model generation. That layer is not converging, and by its nature cannot. Even the vendors say so about their own material. Anthropic, publishing its influential agent patterns, went out of its way to disclaim them: “These building blocks aren’t prescriptive. They’re common patterns that developers can shape and combine to fit different use cases” (Schluntz & Zhang, 2024).
+
+The most useful thing about this argument is that its best example proves both halves at once. AGENTS.md is the flagship of consolidation, the single most standardized artifact in the field. It is also, in the words of the practitioner who has written most clearly about it, the flagship of non-transfer. “Harness engineering,” Addy Osmani writes, “is a discipline rather than a framework. The right harness for your codebase is shaped by your failure history. You can’t download it.” Every line in a good AGENTS.md file, he argues, “should be traceable back to a specific thing that went wrong” (Osmani, 2026a). So the container is universal, and the contents are bespoke, and they are the same object. You can adopt the standard in an afternoon. You cannot adopt the understanding at all. You have to earn it, one failure at a time, in your own repository.
+
+I called this a harness of residue earlier without saying so. Let me say so now. A harness is residue in exactly that sense. It is the pattern your failures leave behind, just as a person’s voice is the pattern a mind leaves behind over years. Not a presentation layer. A residue. The AGENTS.md file is what is left on the page after the work; it is not the work. And this is why you can hold someone else’s file in your hand, read every line, understand each rule, and still not have what they have. You have the residue of their process. You did not run the process.
+
+There is one more property of the content layer that makes the non-transfer worse, and it is temporal rather than spatial. The content does not just fail to travel across repositories. It decays across time. Osmani notes that “a whole class of anxiety-mitigation scaffolding I was writing six months ago is now dead code,” made redundant by a stronger model (Osmani, 2026a). Prithvi Rajasekaran, describing a serious multi-agent harness at Anthropic, built context-reset machinery to handle a weaker model’s “context anxiety,” and expected to delete it as models improved (Rajasekaran, 2026). So the thing you cannot download from me is also a thing I will have to throw away and rebuild myself. It is local and perishable. That is not a knock on the craft. That is the shape of the craft.
+
+Let me be careful about credit, because being loose with it here would undercut the entire paper. The layered anatomy of a harness, the idea that you can decompose it into context, control, action, observation, and persistence, is Trivedy’s, not mine (Trivedy, 2026). The component inventory people often attribute to later popularizers is his as well. I am not offering you a new reference architecture; the field already has one, and I would be committing the paper’s own sin if I dressed a borrowed structure as an invention. My contribution is smaller and, I hope, more durable: the transfer distinction itself, the claim that the interface consolidates while the craft does not, and the argument, which the rest of this paper makes, that this same split repeats at the scales of people and organizations. One fact, three altitudes. That is the spine.
+
+---
+
+Part III: The people
+
+If the contents of the harness do not transfer, then neither does the person who writes them. This is the second altitude, and it is the one where I have to be most careful, because it is where the evidence is thinnest and the temptation to assert is strongest.
+
+Start with what the data actually kills: both fairy tales at once.
+
+The first fairy tale is the 10x engineer, the AI-native prodigy who ships an order of magnitude more because they have the knack. No primary study I could find supports anything close to it, and the one randomized trial we have points the other way, at expert slowdown (Becker et al., 2025). But do not celebrate too early if your instinct runs the other way, because the second fairy tale dies in the same paragraph. “Anyone can do it” is equally unsupported. Expertise clearly moderates the value. Fastly’s survey of nearly 800 developers found that senior engineers ship AI-generated code at more than twice the rate of juniors and, tellingly, edit it more heavily because they can more quickly see where it is wrong (Fastly, 2025). Studies of novices show the opposite end of the same truth: weaker students accept bad suggestions and finish, in one memorable phrase, “with an illusion of competence” (Prather et al., 2024). In a controlled study, developers given an AI assistant “wrote significantly less secure code” while being “more likely to believe they wrote secure code” (Perry et al., 2023). Simon Willison puts the pattern in a single line: “AI tools amplify existing expertise. The more skills and experience you have as a software engineer the faster and better the results you can get from working with LLMs and coding agents” (Willison, 2025b). The tool amplifies. It does not equalize. What it amplifies is whatever judgment you already had, including the absence of it.
+
+Now the part where I have to police myself, because this is where every consultant reaches for a hiring profile and starts selling it.
+
+There is no downloadable hiring profile. I looked. Every “here are the five traits of the AI-ready engineer” artifact I found traces back to vendor or consultant opinion, mine included, if I am honest about the fifth of my career I spent as a consultant. And the closest thing to rigorous evidence actively undercuts the premise that there is a special type. Microsoft, studying tens of thousands of its own engineers, found that sustained adoption of a command-line coding agent “was associated more with engineers’ coding activity than with demographics” (Murphy-Hill et al., 2026). Read that again, because it is doing quiet damage to a popular story. The engineer who gets value from these tools is not identifiable by personality, or seniority, or any archetype you can screen for on a resume. The best available predictor is that they were already coding a lot. The needle-mover is prior engineering strength, plus the discipline to verify, plus a high baseline of actual practice. That is not a type you hire. It is a trajectory you either have already built or have not.
+
+So when I offer you a hiring heuristic, and I will, I am going to label it as exactly what it is: my argued judgment, not a finding. Hire for demonstrated engineering strength and for the habit of verification, because those are the traits the evidence rewards, and be honest that the one solid data point we have slightly deflates the whole idea of a special profile.
+
+The skill everyone circles back to, when pressed, is verification. The ability to look at plausibly generated code and quickly know whether to trust it. The convergence on this point is genuinely broad. Willison states his golden rule plainly: “I won’t commit any code to my repository if I couldn’t explain exactly what it does to somebody else” (Willison, 2025a). Böckeler describes intervening, correcting, and steering “all the time” (Böckeler, 2025). Osmani names its cost “comprehension debt,” the widening gap between the code that exists and the code any human still understands, and puts it exactly where supervision outruns comprehension (Osmani, 2026b). I find this convergence persuasive. I also have to tell you two things about it. It is opinion, not measurement; no study I found isolates review skill as a distinct, measurable, unevenly distributed capability. And the loudest voices arguing that harness craft is the new core skill are, disproportionately, the people who sell harnesses and harness tooling. That does not make them wrong. It makes them interested. You should weight their testimony accordingly, and so should I.
+
+One last discipline for this section is the one that separates an honest human-cost argument from its mirror-image hype. The scary stories are not established. Deskilling of working developers is a genuine open question, not a finding: the alarming studies are about essay writing and general knowledge work, use small sample sizes, rely on self-reports, and there is no longitudinal study of skill atrophy among practicing engineers (Kosmyna et al., 2025). “AI killed the junior job” is likewise unproven. Entry-level compression is real, but the cleanest analyses attribute most of it to the end of the zero-interest-rate hiring binge rather than to AI, and even the researchers who find AI-exposed employment declines explicitly decline to claim AI caused them (Brynjolfsson et al., 2025; SignalFire, 2025). Klarna, which loudly replaced staff with AI, reversed course and began rehiring, its CEO conceding that a cost-first approach had produced, in his words, “lower quality” (Ivanova, 2025). If I told you AI is hollowing out the profession, I would be selling you fear with the same missing caveats that the vendors use to sell you hope. I am not going to do that. The honest position is that the human costs are plausible, partially visible, and not yet proven, and that anyone claiming certainty in either direction is performing rather than measuring.
+
+---
+
+Part IV: The laggard question
+
+Now raise the altitude one more time, from the person to the organization, because this is the scale where money is decided and fear is sold hardest. The pitch is familiar. Adopt now, or die. The laggards will be left behind. Move fast, buy the platform, or your competitor eats you.
+
+I went looking for the evidence behind that pitch, expecting it to be at least partly true, and I want to report honestly that on its own terms it mostly falls apart.
+
+The cleanest, least-conflicted sources cut directly against the urgency. Golder and Tellis, in a study that has aged extremely well, found that market pioneers fail 47% of the time and end up with a fraction of the market, while early leaders and fast followers, entering on average more than a decade later, fail 8% of the time and end up with far more (Golder & Tellis, 1993). First-mover advantage is, to a first approximation, a piece of folklore that consultants sell. DORA, whose corporate parent sells AI tooling and therefore has every reason to say otherwise, found that undisciplined AI adoption came with measurably worse delivery stability (DORA, 2025). And no primary source I could find shows non-adopters falling behind because they did not adopt. The “velocity gap” that vendors quantify so confidently is marketing, and the one evidence-grade productivity proxy we have points the wrong way for it.
+
+So the harsh narrative, “adopt now or die,” is not defensible, and I will not defend it. But I am not going to let that become an excuse for complacency either, because there is exactly one hard edge in this section, and it is real, and it is the organizational echo of everything I have already argued.
+
+You cannot procure your way out of a late start.
+
+This is the one place the paper gets to be tough, and it earns the toughness from the least fashionable, most durable sources in the entire corpus. Cohen and Levinthal, forty years ago, described “absorptive capacity,” a firm’s ability to recognize, assimilate, and use new knowledge, and showed that it is “history- or path-dependent.” Their warning was sharp: a firm that stops investing in that capacity “may never assimilate and exploit new information in that field, regardless of the value of that information” (Cohen & Levinthal, 1990). They called that condition lockout. Teece, Pisano, and Shuen put the same truth in blunter terms: the distinctive capabilities that matter “must be built because they cannot be bought” (Teece et al., 1997). And Stanford’s fieldwork on enterprise AI puts a clock on it: the same use case took “weeks at one company and years at another,” and the difference was organizational, not technical (Pereira et al., 2026).
+
+Read those together, and the real risk comes into focus, and it is not the risk the vendors are selling. The risk is not that you will fail to buy the right platform this quarter. Platforms are the one thing you actually can buy later, and often should. The risk is that the capacity to absorb this class of technology is cumulative, path-dependent, and internally built, and the clock on building it is already running whether or not you have spent a dollar on tooling. You can defer the purchase. You cannot defer the learning, because the learning is the part that compounds, and the part that, once you have fallen far enough behind, you may not be able to start.
+
+This resolves the whole laggard question into a posture, and it is neither “buy everything now” nor “wait and see.” It is the posture of staged, reversible bets. Treat specific tooling commitments as real options: make them small, make them reversible, and make more of them where the downside is bounded, fewer where the downside is asymmetric. Defer the specific stack where a mistake is expensive and hard to undo: expert teams on mature, regulated codebases, weak delivery infrastructure, anywhere a bad autonomous action is catastrophic. The cautionary anecdote writes itself, and did: an AI agent deleted a production database during a code freeze, and the CEO of the company whose tool it was called it “unacceptable” (Nolan, 2025). Defer the stack there. But do not, anywhere, defer the building of the capability itself, because that is the thing you cannot buy back.
+
+A word on the 95% from Part I, since it gets waved around most in exactly this debate. Handle it carefully. The MIT figure slides between denominators, organizations and pilots and custom tools, and “zero return” is not “value destroyed” (MIT Project NANDA, 2025). But the report’s most quoted sentence is also its most useful one, and it supports the argument I am making rather than the panic it usually serves: “The core barrier to scaling is not infrastructure, regulation, or talent. It is learning.” That is the whole section in one line, from a source people cite for the opposite purpose.
+
+And there is a real gap, just not the one the fear-sellers describe. The US Census Bureau found that 37% of large firms use AI, compared with fewer than 20% of small firms (US Census Bureau, 2026). The frontier is experimenting at roughly twice the rate of the tail. That divergence is real, and it matters, but notice what kind of divergence it is. It is a gap in capacity building, in reps, and in accumulated organizational learning. It is the compounding kind. Which brings us back to the only thing this paper has been saying from the beginning.
+
+---
+
+Part V: The devil is in the details
+
+Step back and look at what we have three times now.
+
+At the scale of code, the harness format is universal, and its contents are yours alone, traceable to your failures, stale by the next model. You cannot download it. At the scale of the person, the tool amplifies existing judgment, and there is no profile to hire for; the capability is built through practice, not bought through recruiting. At the organizational scale, the platform is purchasable, but absorptive capacity is path-dependent and subject to lockout; you cannot buy your way out of a late start. Osmani’s “you can’t download it,” Teece’s “cannot be bought,” and Cohen and Levinthal’s “lockout” are not three observations. They are one observation, said three times, at three altitudes.
+
+Let me name the single shape beneath all three, because that’s the point of the paper. At every scale there is a cheap, visible artifact, and an expensive, invisible process that produced it. The AGENTS.md file is the artifact; the failure history is the process. The hire is the artifact; the years of judgment are the process. The bought platform is the artifact; the organizational learning is the process. The artifact transfers. The process does not. And the entire over-marketing of this field, the 70-point gap I opened with, is one move performed at every level: selling you the artifact, and letting you believe you bought the process.
+
+That is the devil in the details. Not that the details are hard, though they are. That the details are the thing, and the details are local, and the details are yours. What is standardized is never what is valuable, precisely because standardization is what makes a thing cheap. When a capability becomes easy to reproduce, the market stops paying a premium for it. The differentiator weakens, scarcity disappears, and perception follows. That is as true of harnesses now as it has been of every craft that was once rare and became a commodity. The interface has been consolidated, so it is free. The craft did not consolidate, so it’s where you live or die.
+
+The prescription follows, and it is not complicated, though it is unwelcome. Stop shopping for the playbook. There is no playbook; there is only the capacity to write your own, and that capacity is the sole thing worth investing in because it is the only thing that compounds and the only thing a competitor cannot copy off you. Buy tools, but buy them the way you would exercise an option, cheaply and reversibly, and never mistake the purchase for the progress. Measure outcomes, not perceptions, because this is a domain where the users, including you, including after the fact, are documented unreliable narrators of their own results. And treat every borrowed pattern, including every pattern in this paper, as a starting hypothesis for your own context rather than an answer imported from someone else’s.
+
+I will close where I started, with the method, because the method turned out to be the message.
+
+The discipline this paper used to survive its own research was simple and old: verify every claim against its primary source, and keep separate what was measured from what was merely asserted. When I applied that discipline to the literature of harness engineering, the field diagnosed itself. A named trade publication had printed a quote its subject never spoke. A four-part framework that is cited as foundational appears in none of the sources to which it is attributed. The origin story is wrong; the term was in practitioner use months before the corporate post that everyone calls its beginning. The literature of a field that sells transferable, turnkey, downloadable expertise turns out, on inspection, to be over-documented and under-verified. It is itself an exhibit of the thing it fails to notice about itself.
+
+The discipline that caught all of that is the same discipline an organization needs to adopt this technology without being sold: measure the thing, do not trust the pitch, and do the local work that cannot be skipped. I do not offer that as a clever closing symmetry. I offer it as the actual recommendation, the only one this paper is confident enough to make, tested on the paper’s own sources and found to hold.
+
+One final disclosure, in the spirit of the genre. This paper is capability-indexed too. The specific numbers will age, the model generations will turn over, and some of what I have written will become, in Osmani’s phrase, dead code. I have tried to write the parts that will outlast the specifics: not which tool wins, but why the winning was never the point. If I have done it right, the details in here will expire, and the argument about details will not. That is the most a grey paper can honestly promise, and it is the reason I did not call it a white one.
+
+---
+
+Appendix A: On verification, and what it caught
+
+This paper makes an unusual claim about its own sources, so I owe you the receipts.
+
+I treated the six most-cited pieces on harness engineering as primary sources to be verified rather than quoted on trust. I read each one at the source and checked every claim the wider discourse attributes to it. Every single one had at least one widely repeated attribution that the source does not support. What follows are the sharpest specimens, spanning those six primary pieces and the secondary coverage around them, rather than the full accounting; the complete source-by-source ledger is noted at the end of this appendix.
+
+- A framework of four verbs, cited as the organizing contribution of the field’s most famous post, appears nowhere in that post. Its actual argument is that the scarce resource became “human QA capacity,” which is nearly the opposite of the claim usually hung on it (Lopopolo, 2026).
+- The harness equation and the component inventory that circulate under a popularizer’s name are, by that popularizer’s own attribution, Trivedy’s; the popularizer says so plainly and routes the credit upstream (Osmani, 2026a; Trivedy, 2026).
+- The idea usually stated as a named “principle,” that every rule should trace to a specific past failure, was arrived at independently and earlier by Mitchell Hashimoto, who wrote that he had “grown to calling this ‘harness engineering’” in February 2026, days before the corporate post that gets called the origin, and months after Trivedy’s first documented use in October 2025 (Hashimoto, 2026; Trivedy, 2025). The field has no single coinage event. Definition followed adoption, not the other way around.
+- A named trade publication attributed to a named engineer a direct quote describing a “Harness” product that the underlying article never mentions and does not describe (Kumili, 2026). The quote does not exist in the source. This is the cleanest specimen in the whole exercise: not compression, not paraphrase, a fabricated sentence in quotation marks under a real person’s name, in a reputable outlet.
+
+The pattern across every error was the same, and it is worth stating because it is the paper’s thesis wearing a lab coat: each mistake ran toward the more quotable claim. Continuity got read as conflict. A byline got read as a credential. A single anecdote got read as a constant. A framework that existed nowhere got cited everywhere. Some of that is ordinary compaction, qualifications falling off as a claim travels. Some of it is AI-generated secondary coverage polluting the record, which is a grimly appropriate way for this particular field to have gotten its facts wrong.
+
+For the external evidence on economics, labor, and organizational adoption, the same method was applied across roughly 40 primary sources, with conflicts of interest flagged and unreached primaries marked accordingly. It caught the same disease on the other side of the aisle: the two most-quoted skeptical statistics, METR’s 19% and MIT’s 95%, are both narrower than the headlines they travel under, and citing either one in a bare way would have committed the confirmation-bias error the paper is about. The bias is symmetric. Hype and anti-hype both strip caveats. The method is the corrective, and it is the only reason I trust the argument enough to publish it.
+
+A full source ledger, with verification status, dates, and conflict-of-interest notes for every citation, sits alongside this paper and is available on request.
+
+---
+
+Appendix B: The fuzzy taxonomy, in full
+
+A longer statement of the definitional method from the front matter, for readers who want the apparatus rather than the summary.
+
+The move is to define by approaching. Two borrowed ideas make that precise, and I want to restate the disclaimer plainly: this is a productive lens, not a theorem, and I am not claiming a proof of convergence. I am claiming that the vocabulary of graded membership and limiting approximation describes how these terms actually behave better than crisp definitions do.
+
+First, membership is a degree, not a switch. Following Zadeh (1965), a thing belongs to a category to a degree between zero and one, rather than simply in or out. “Is this an agent?” is answered by a position on that interval, along a named axis, not by a yes or a no.
+
+Second, every published definition is a tangent line. It touches the real meaning at the point its author was looking at, and it drifts from that meaning as you move away from their case. So a good definition of a contested term has three parts: the core that every serious definition is reaching toward, the axes along which membership falls off from that core, and the anchor where each source’s definition touches, which tells you what that author was actually studying.
+
+Worked through for the three terms this paper leans on:
+
+Agent. Core: a model that, given a goal, selects its own next actions using tools against feedback, holding state across turns. Primary axis: degree of self-direction. The reason Anthropic’s workflow-versus-agent line (Schluntz & Zhang, 2024) and OpenAI’s plainer “LLMs equipped with instructions and tools” (OpenAI, n.d.) can both be right is that they mark different points on a gradient rather than disagree about a boundary.
+
+Harness. Core: the non-model apparatus that turns a model into an agent, everything that is not the model (Trivedy, 2026; Böckeler, 2026). Axes: scope, from the whole complement of the model down to a single shipped runtime component, which is the sense in which a vendor uses the word (OpenAI, n.d.); and boundary membership, where the system prompt is high-membership harness and a human reviewer is low. The two-senses collision is not sloppiness to be tidied away. It is data about a field whose words have not finished settling.
+
+Harness engineering. Core: the practice of shaping everything around the model so the model reliably does what you want. Four anchors triangulate it. Hashimoto touches on failure correction, the rule that traces back to a past mistake (Hashimoto, 2026). Böckeler touches on cybernetics, guides, and sensors as feedforward and feedback (Böckeler, 2026). Trivedy touches on capability-shaping and the molding of a spiky intelligence (Trivedy, 2026). Osmani touches on locality, the discipline you cannot download (Osmani, 2026a). None of them states the whole curve. Together they bound it. And the fact that the term resists a crisp definition is not a failure of the field’s writers. It is the thesis showing up in the language: a practice defined by local, non-transferable detail will have a name that behaves the same way.
+
+---
+
+References
+
+A note on these sources. Every citation below was checked against its primary source or an authoritative registry: a publisher DOI record, an arXiv abstract page, or the issuing organization’s own report. A few caveats remain (marked ⚠) and are disclosed here rather than hidden. MIT NANDA no longer serves its report at a stable public URL, so the citation points to the project’s group page and the text was confirmed against an identical copy. The Gartner press release body sits behind a bot wall, so only its headline and named analyst commentary are directly confirmed. And two early practitioner records (Trivedy’s October 2025 usage, and the Answer.AI Devin write-up) are cited from notes whose exact title or URL I could not reconfirm. Everything else verified cleanly. This note is not boilerplate; it is the paper’s method applied to its own reference list.
+
+agents.md. (2025). AGENTS.md: A simple, open format for guiding coding agents. https://agents.md
+
+Becker, J., Rush, N., Barnes, E., & Rein, D. (2025). Measuring the impact of early-2025 AI on experienced open-source developer productivity (arXiv:2507.09089). arXiv. https://arxiv.org/abs/2507.09089
+
+Böckeler, B. (2025, March 25). The role of developer skills in agentic coding [Exploring Gen AI series]. martinfowler.com. https://martinfowler.com/articles/exploring-gen-ai/13-role-of-developer-skills.html
+
+Böckeler, B. (2026, April 2). Harness engineering for coding agent users. martinfowler.com. https://martinfowler.com/articles/harness-engineering.html
+
+Brynjolfsson, E., Chandar, B., & Chen, R. (2025, November 13). Canaries in the coal mine? Six facts about the recent employment effects of artificial intelligence [Working paper]. Stanford Digital Economy Lab. https://digitaleconomy.stanford.edu/publication/canaries-in-the-coal-mine-six-facts-about-the-recent-employment-effects-of-artificial-intelligence/
+
+Cohen, W. M., & Levinthal, D. A. (1990). Absorptive capacity: A new perspective on learning and innovation. Administrative Science Quarterly, 35(1), 128–152. https://doi.org/10.2307/2393553
+
+DORA. (2025). State of AI-assisted software development. Google Cloud. https://dora.dev/dora-report-2025
+
+Fastly. (2025, August 27). Vibe shift? Senior developers ship nearly 2.5x more AI code than junior counterparts. Fastly. https://www.fastly.com/blog/senior-developers-ship-more-ai-code
+
+Gartner. (2025, June 25). Gartner predicts over 40% of agentic AI projects will be canceled by end of 2027 [Press release]. ⚠ press-release body is bot-gated; headline and named analyst commentary confirmed via secondary coverage
+
+Golder, P. N., & Tellis, G. J. (1993). Pioneer advantage: Marketing logic or marketing legend? Journal of Marketing Research, 30(2), 158–170. https://doi.org/10.1177/002224379303000203
+
+Google Cloud. (2025). The ROI of AI 2025: How agents are unlocking the next wave of AI-driven business value. Google Cloud. https://cloud.google.com/resources/content/roi-of-ai-2025
+
+Harding, B. (2025). AI copilot code quality: 2025 data suggests 4x growth in code clones. GitClear. https://www.gitclear.com/ai_assistant_code_quality_2025_research
+
+Hashimoto, M. (2026, February 5). My AI adoption journey. mitchellh.com. https://mitchellh.com/writing/my-ai-adoption-journey
+
+Husain, H., Flath, J., & Whitaker, K. (2025, January 8). Thoughts on a month with Devin. Answer.AI. ⚠ exact title and URL not re-confirmed against the primary
+
+Ivanova, I. (2025, May 9). As Klarna flips from AI-first to hiring people again, a new landmark survey reveals most AI projects fail to deliver. Fortune. https://fortune.com/2025/05/09/klarna-ai-humans-return-on-investment/
+
+Kosmyna, N., Hauptmann, E., Yuan, Y. T., Situ, J., Liao, X.-H., Beresnitzky, A. V., Braunstein, I., & Maes, P. (2025). Your brain on ChatGPT: Accumulation of cognitive debt when using an AI assistant for essay writing task (arXiv:2506.08872). arXiv. https://arxiv.org/abs/2506.08872
+
+Kumili, L. (2026, February 21). OpenAI introduces harness engineering: Codex agents power large-scale software development. InfoQ. https://www.infoq.com/news/2026/02/openai-harness-engineering-codex/ Cited as an example of a fabricated attribution, not as a reliable source.
+
+Linux Foundation. (2025, December 9). Linux Foundation launches the Agentic AI Foundation [Press release]. https://www.linuxfoundation.org
+
+Lopopolo, R. (2026, February 11). Harness engineering: Leveraging Codex in an agent-first world. OpenAI. https://openai.com/index/harness-engineering/
+
+METR. (2026, February 24). We are changing our developer productivity experiment design. METR. https://metr.org/blog/2026-02-24-uplift-update/
+
+MIT Project NANDA. (2025, July). The GenAI divide: State of AI in business 2025. MIT NANDA. https://www.media.mit.edu/groups/nanda/overview/ ⚠ the direct report PDF is no longer hosted at a stable public URL; text confirmed against an identical copy
+
+Murphy-Hill, E., Butler, J., & Savelieva, A. (2026). Adoption and impact of command-line AI coding agents: A study of Microsoft’s early 2026 rollout of Claude Code and GitHub Copilot CLI (arXiv:2607.01418). arXiv. https://arxiv.org/abs/2607.01418
+
+Nolan, B. (2025, July 23). An AI-powered coding tool wiped out a software company’s database, then apologized for a “catastrophic failure on my part”. Fortune. https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure/
+
+OpenAI. (n.d.). OpenAI Agents SDK documentation. Retrieved 2026, from https://openai.github.io/openai-agents-python/
+
+Osmani, A. (2026a, April 19). Agent harness engineering. https://addyosmani.com/blog/agent-harness-engineering/
+
+Osmani, A. (2026b, March 14). Comprehension debt: The hidden cost of AI-generated code. https://addyosmani.com/blog/comprehension-debt/
+
+Osmani, A. (2026c, January 2). The future of agentic coding: Conductors to orchestrators. https://addyosmani.com/blog/future-agentic-coding/
+
+Peng, S., Kalliamvakou, E., Cihon, P., & Demirer, M. (2023). The impact of AI on developer productivity: Evidence from GitHub Copilot (arXiv:2302.06590). arXiv. https://arxiv.org/abs/2302.06590
+
+Pereira, E., Graylin, A. W., & Brynjolfsson, E. (2026, April). The Enterprise AI Playbook: Lessons from 51 successful deployments. Stanford Digital Economy Lab. https://digitaleconomy.stanford.edu/publication/enterprise-ai-playbook/
+
+Perry, N., Srivastava, M., Kumar, D., & Boneh, D. (2023). Do users write more insecure code with AI assistants? In Proceedings of the 2023 ACM SIGSAC Conference on Computer and Communications Security (CCS '23) (pp. 2785–2799). ACM. https://doi.org/10.1145/3576915.3623157
+
+Prather, J., Reeves, B. N., Leinonen, J., MacNeil, S., Randrianasolo, A. S., Becker, B. A., Kimmel, B., Wright, J., & Briggs, B. (2024). The widening gap: The benefits and harms of generative AI for novice programmers. In Proceedings of the 2024 ACM Conference on International Computing Education Research – Volume 1 (ICER '24) (pp. 469–486). ACM. https://doi.org/10.1145/3632620.3671116
+
+Purdue OWL. (n.d.). White paper: Purpose and audience. Purdue Online Writing Lab. https://owl.purdue.edu
+
+Rajasekaran, P. (2026, March 24). Harness design for long-running application development. Anthropic. https://www.anthropic.com/engineering/harness-design-long-running-apps
+
+Schluntz, E., & Zhang, B. (2024, December 19). Building effective agents. Anthropic. https://www.anthropic.com/engineering/building-effective-agents Page byline renders as “Erik S. and Barry Zhang.”
+
+SignalFire. (2025, May 20). The SignalFire state of tech talent report – 2025. SignalFire. https://www.signalfire.com/blog/signalfire-state-of-talent-report-2025
+
+Teece, D. J., Pisano, G., & Shuen, A. (1997). Dynamic capabilities and strategic management. Strategic Management Journal, 18(7), 509–533. https://doi.org/10.1002/(SICI)1097-0266(199708)18:7<509::AID-SMJ882>3.0.CO;2-Z
+
+Trivedy, V. (2025, October 24). The modern planning agent is really a dynamic, adaptive workflow generator. ⚠ earliest documented use of “harness engineering”; exact URL not re-confirmed
+
+Trivedy, V. (2026, March 10). The anatomy of an agent harness. https://www.vtrivedy.com/posts/the-anatomy-of-an-agent-harness
+
+US Census Bureau. (2026). Business Trends and Outlook Survey (BTOS): AI use supplement. https://www.census.gov
+
+Veracode. (2025). 2025 GenAI code security report. Veracode. https://www.veracode.com/resources/analyst-reports/2025-genai-code-security-report/
+
+White paper. (n.d.). In Wikipedia. Retrieved 2026. ⚠ tertiary source, used only for the document-type history; Churchill White Paper (1922) as an early named instance is not confirmed against a government primary
+
+Willison, S. (2025a, March 19). Not all AI-assisted programming is vibe coding (but vibe coding rocks). https://simonwillison.net/2025/Mar/19/vibe-coding/
+
+Willison, S. (2025b, October 7). Vibe engineering. https://simonwillison.net/2025/Oct/7/vibe-engineering/
+
+Wood, G. (2024). JAM: A mostly-coherent trustless supercomputer [Gray Paper]. https://graypaper.com
+
+Young, J. (2025, November 26). Effective harnesses for long-running agents. Anthropic. https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents
+
+Zadeh, L. A. (1965). Fuzzy sets. Information and Control, 8(3), 338–353. https://doi.org/10.1016/S0019-9958(65)90241-X
