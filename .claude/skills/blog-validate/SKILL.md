@@ -13,7 +13,7 @@ That is the bug this guards against. It has shipped here before — commit `9749
 
 ```bash
 yarn validate data/blog/2026/my-post.mdx   # one post
-yarn validate:all                          # every post, including data/blog/examples
+yarn validate:all                          # all 33 posts across every year
 ```
 
 Exit code is `1` if there are errors, `0` if only warnings. Warnings never block.
@@ -52,8 +52,8 @@ Run this **before** `blog-publish` and after any edit to a post body.
 - **Report errors plainly and stop.** Do not publish a post with errors.
 - **Do not auto-fix silently.** Show the offending line and the fix, then let the user confirm —
   an escaped character changes rendered prose.
-- **Do not strip `tags:` from existing posts** as a side effect of validating. All 6
-  published posts carry it; removing it is a separate decision.
+- **Do not strip `tags:` from existing posts** as a side effect of validating. Most posts
+  carry it; removing it is a separate decision.
 - **Never flip `draft` on the author's behalf.** A `draft-post` warning is information, not
   a defect — publishing is their call, and clearing the flag puts the post on the live site.
 
@@ -67,7 +67,9 @@ yarn test
 ```
 
 A validator that cries wolf on real posts gets ignored, which is worse than no validator.
-If a new rule flags any of the 6 published posts, the rule is wrong — not the post.
+If a new rule flags any of the 33 published posts, the rule is wrong — not the post. The
+corpus test walks every year directory for exactly this reason: checking only the recent
+years once hid a false positive in the 2024 posts.
 
 ## Next step
 
