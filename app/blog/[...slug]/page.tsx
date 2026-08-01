@@ -2,7 +2,7 @@ import 'css/prism.css'
 import 'katex/dist/katex.css'
 
 import MDXContent from '@/components/MDXContent'
-import { allCoreContent, coreContent, sortPosts } from '@/lib/content-utils'
+import { allCoreContent, coreContent, sortPosts, publishedPosts } from '@/lib/content-utils'
 import { blogs, authors } from '@/content'
 import type { Blog, Authors } from '@/content'
 import PostSimple from '@/layouts/PostSimple'
@@ -61,13 +61,14 @@ export async function generateMetadata(props: {
 }
 
 export const generateStaticParams = async () => {
-  return blogs.map((p) => ({ slug: p.slug.split('/') }))
+  return publishedPosts(blogs).map((p) => ({ slug: p.slug.split('/') }))
 }
 
 export default async function Page(props: { params: Promise<{ slug: string[] }> }) {
   const params = await props.params
   const slug = decodeURI(params.slug.join('/'))
-  const sortedCoreContents = allCoreContent(sortPosts(blogs))
+  // Draft posts are absent from this list, so a draft slug falls through to notFound().
+  const sortedCoreContents = allCoreContent(sortPosts(publishedPosts(blogs)))
   const postIndex = sortedCoreContents.findIndex((p) => p.slug === slug)
   if (postIndex === -1) return notFound()
 

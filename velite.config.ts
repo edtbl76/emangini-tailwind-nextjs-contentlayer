@@ -38,6 +38,8 @@ const blogs = defineCollection({
       authors: s.array(s.string()).optional(),
       layout: s.string().optional(),
       bibliography: s.string().optional(),
+      // Held back from every surface — see publishedPosts() in lib/content-utils.ts.
+      draft: s.boolean().default(false),
       body: s.mdx(),
       toc: s.toc(),
       raw: s.raw(),
