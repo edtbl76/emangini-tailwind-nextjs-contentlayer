@@ -122,7 +122,9 @@ describe('raw angle brackets in prose', () => {
   })
 
   test('reports the correct line number in a multi-line body', () => {
-    const body = ['Intro paragraph.', '', 'Second paragraph.', '', 'Here is a < problem.'].join('\n')
+    const body = ['Intro paragraph.', '', 'Second paragraph.', '', 'Here is a < problem.'].join(
+      '\n'
+    )
     const findings = validatePost({ raw: post(body), filePath: 'data/blog/2026/x.mdx' })
     const errors = errorsOf(findings)
 
@@ -135,9 +137,15 @@ describe('raw angle brackets in prose', () => {
 
 describe('false-positive guards', () => {
   test('ignores `<` inside a fenced code block', () => {
-    const body = ['Some prose.', '', '```ts', 'if (a < b) return <Foo />', '```', '', 'More prose.'].join(
-      '\n'
-    )
+    const body = [
+      'Some prose.',
+      '',
+      '```ts',
+      'if (a < b) return <Foo />',
+      '```',
+      '',
+      'More prose.',
+    ].join('\n')
     const findings = validatePost({ raw: post(body), filePath: 'data/blog/2026/x.mdx' })
 
     assert.deepEqual(errorsOf(findings), [], 'code fences must be exempt')
@@ -186,12 +194,23 @@ describe('frontmatter rules', () => {
     assert.ok(rulesOf(errorsOf(findings)).includes('required-field'))
   })
 
-  test('errors on a non-ISO date string', () => {
-    const raw = "---\ntitle: 'X'\ndate: 'July 17, 2026'\n---\n\nBody.\n"
+  test('errors only when Date.parse cannot read the date', () => {
+    const raw = "---\ntitle: 'X'\ndate: 'sometime last autumn'\n---\n\nBody.\n"
     const findings = validatePost({ raw, filePath: 'data/blog/2026/x.mdx' })
-    const errors = errorsOf(findings)
 
-    assert.ok(rulesOf(errors).includes('date-format'))
+    assert.ok(rulesOf(errorsOf(findings)).includes('date-format'))
+  })
+
+  test('warns — never errors — on a parseable non-ISO date', () => {
+    // s.isodate() only requires Date.parse to succeed, then normalizes. Three of the 2024
+    // posts use this exact shape and build fine; erroring here would flag working content.
+    const raw = "---\ntitle: 'X'\ndate: '2024-06-04 00:00:00'\n---\n\nBody.\n"
+    const findings = validatePost({ raw, filePath: 'data/blog/2024/x.mdx' })
+
+    assert.deepEqual(errorsOf(findings), [], 'Velite accepts this, so we must too')
+    const warn = findings.find((f) => f.rule === 'nonstandard-date')
+    assert.ok(warn)
+    assert.match(warn.hint, /2024-06-04/)
   })
 
   test('warns rather than errors on an unquoted YAML timestamp', () => {
@@ -234,16 +253,43 @@ describe('frontmatter rules', () => {
     assert.deepEqual(errorsOf(findings), [])
   })
 
-  test('warns — never errors — on dead draft/tags frontmatter', () => {
+  test('warns — never errors — on dead tags frontmatter', () => {
     const findings = validatePost({
-      raw: post('Body.', "draft: false\ntags: ['a']\n"),
+      raw: post('Body.', "tags: ['a']\n"),
       filePath: 'data/blog/2026/x.mdx',
     })
 
     assert.deepEqual(errorsOf(findings), [], 'dead keys must not fail a build')
     const dead = findings.filter((f) => f.rule === 'dead-frontmatter')
-    assert.equal(dead.length, 2)
-    assert.ok(dead.find((f) => f.message.includes('draft')).hint.includes('still publishes'))
+    assert.equal(dead.length, 1)
+    assert.match(dead[0].message, /tags/)
+  })
+
+  test('treats draft as a real schema key, not dead frontmatter', () => {
+    const findings = validatePost({
+      raw: post('Body.', 'draft: false\n'),
+      filePath: 'data/blog/2026/x.mdx',
+    })
+
+    assert.deepEqual(errorsOf(findings), [])
+    assert.equal(
+      findings.filter((f) => f.rule === 'dead-frontmatter').length,
+      0,
+      'draft is honored by publishedPosts() and belongs to the schema'
+    )
+    assert.equal(findings.filter((f) => f.rule === 'draft-post').length, 0)
+  })
+
+  test('warns that a draft post will not appear on the site', () => {
+    const findings = validatePost({
+      raw: post('Body.', 'draft: true\n'),
+      filePath: 'data/blog/2026/x.mdx',
+    })
+
+    assert.deepEqual(errorsOf(findings), [], 'a draft is legitimate, not an error')
+    const draft = findings.find((f) => f.rule === 'draft-post')
+    assert.ok(draft, 'should say the post is held back')
+    assert.match(draft.message, /excluded/)
   })
 
   test('warns on a year directory that disagrees with the date', () => {
@@ -268,18 +314,23 @@ describe('maskNonProse', () => {
 })
 
 describe('the real corpus', () => {
-  const realPosts = ['2026', '2025'].flatMap((year) => {
-    const dir = path.join(repoRoot, 'data', 'blog', year)
-    return fs
-      .readdirSync(dir)
-      .filter((f) => f.endsWith('.mdx'))
-      .map((f) => path.join(dir, f))
-  })
+  // Every year, not just the recent ones. Checking only 2025-2026 hid a false positive in
+  // the 2024 posts for a full round of work — a rule is only trustworthy against all of it.
+  const blogRoot = path.join(repoRoot, 'data', 'blog')
+  const realPosts = fs
+    .readdirSync(blogRoot)
+    .filter((entry) => /^\d{4}$/.test(entry))
+    .flatMap((year) =>
+      fs
+        .readdirSync(path.join(blogRoot, year))
+        .filter((f) => f.endsWith('.mdx'))
+        .map((f) => path.join(blogRoot, year, f))
+    )
 
   const knownAuthors = readKnownAuthors(path.join(repoRoot, 'data', 'authors'))
 
-  test('finds all 6 published posts', () => {
-    assert.equal(realPosts.length, 6)
+  test('finds every published post', () => {
+    assert.ok(realPosts.length >= 30, `expected the full corpus, saw ${realPosts.length}`)
   })
 
   for (const file of realPosts) {

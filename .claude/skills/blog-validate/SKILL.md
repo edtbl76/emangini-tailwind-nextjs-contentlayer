@@ -32,28 +32,30 @@ Run this **before** `blog-publish` and after any edit to a post body.
 | `undefined-component` | Capitalized tag. JSX resolves it as a variable, and it is not defined. | Only `Image` and `TOCInline` exist (`components/MDXComponents.tsx`). |
 | `html-comment`        | `<!-- -->` is invalid in MDX v2.                                       | Use `{/* ... */}`.                                                   |
 | `required-field`      | Missing `title` or `date`.                                             | Velite requires both; the build fails.                               |
-| `date-format`         | Date string is not `YYYY-MM-DD`.                                       | Quote it: `date: '2026-07-17'`.                                      |
+| `date-format`         | `Date.parse` cannot read the date, so `s.isodate()` rejects it.        | Use `YYYY-MM-DD`: `date: '2026-07-17'`.                              |
 | `unknown-author`      | `authors:` entry with no file in `data/authors/`.                      | Use `default`, or add the author file.                               |
 
 ### Warnings — worth knowing, never fatal
 
-| Rule                  | Meaning                                                                                                                                                    |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `dead-frontmatter`    | `draft:` or `tags:`. Neither is in the Velite schema nor read anywhere in the codebase. **`draft: true` does not prevent publication.** Do not rely on it. |
-| `unknown-frontmatter` | Key outside the schema; silently stripped at build.                                                                                                        |
-| `unquoted-date`       | YAML parsed the date as a timestamp. Valid, but quote it to match other posts.                                                                             |
-| `missing-summary`     | No `summary`; post listings will have nothing to show.                                                                                                     |
-| `year-mismatch`       | File is in `data/blog/<year>/` that disagrees with `date`. Convention only.                                                                                |
+| Rule                  | Meaning                                                                                                                                                     |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `draft-post`          | `draft: true` — the post is deliberately held back from listings, its own route, the sitemap, and RSS. Expected while drafting; check it before publishing. |
+| `dead-frontmatter`    | `tags:`. Not in the Velite schema and not read anywhere; silently stripped at build. The tag UI was removed.                                                |
+| `unknown-frontmatter` | Key outside the schema; silently stripped at build.                                                                                                         |
+| `unquoted-date`       | YAML parsed the date as a timestamp. Valid, but quote it to match other posts.                                                                              |
+| `nonstandard-date`    | Parseable but not `YYYY-MM-DD` (e.g. `'2024-06-04 00:00:00'`). Velite accepts and normalizes it; three 2024 posts use this shape. House style only.         |
+| `missing-summary`     | No `summary`; post listings will have nothing to show.                                                                                                      |
+| `year-mismatch`       | File is in `data/blog/<year>/` that disagrees with `date`. Convention only.                                                                                 |
 
 ## Interpreting results for the user
 
 - **Report errors plainly and stop.** Do not publish a post with errors.
 - **Do not auto-fix silently.** Show the offending line and the fix, then let the user confirm —
   an escaped character changes rendered prose.
-- **Do not strip `draft:`/`tags:` from existing posts** as a side effect of validating. All
-  6 published posts carry them; removing them is a separate decision.
-- The 3 errors in `data/blog/examples/` are pre-existing starter-template content
-  (`sparrowhawk` author, `BlogNewsletterForm`). Mention them once; don't re-flag every run.
+- **Do not strip `tags:` from existing posts** as a side effect of validating. All 6
+  published posts carry it; removing it is a separate decision.
+- **Never flip `draft` on the author's behalf.** A `draft-post` warning is information, not
+  a defect — publishing is their call, and clearing the flag puts the post on the live site.
 
 ## Adding a rule
 

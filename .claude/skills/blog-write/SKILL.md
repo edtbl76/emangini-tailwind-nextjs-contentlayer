@@ -34,13 +34,21 @@ authors: ['default']
 
 **Quote the dates.** Unquoted, YAML parses them as timestamps rather than strings.
 
-**Do not add `draft:` or `tags:`.** Neither is in the Velite schema, and `grep -rn "draft"`
-across the codebase returns nothing — they are inherited starter-template cargo. Critically,
-`draft: true` does **not** hold a post back; it publishes anyway. If a post is not ready,
-leave it out of `data/blog/` entirely or keep it on an unmerged branch.
+**Do not add `tags:`.** It is not in the Velite schema and the tag UI was removed, so it is
+silently stripped at build time. Existing posts still carry it; leave them alone rather than
+cleaning them up as a side effect of writing a new post.
 
-Existing posts still carry these keys. Leave them alone; do not clean them up as a side
-effect of writing a new post.
+### Holding a post back
+
+`draft: true` genuinely works — it excludes the post from listings, pagination, its own
+route, the sitemap, and RSS via `publishedPosts()` in `lib/content-utils.ts`.
+
+```yaml
+draft: true
+```
+
+Add it while a post is in progress and remove it (or set `false`) to publish. Omitting the
+key entirely means published — the schema defaults it to `false`.
 
 ### Optional keys
 

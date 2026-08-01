@@ -27,13 +27,80 @@ export const MDX_COMPONENTS = new Set(['Image', 'TOCInline'])
 
 /** Lowercase tags MDX passes straight through to HTML. */
 export const HTML_ELEMENTS = new Set([
-  'a', 'abbr', 'address', 'article', 'aside', 'audio', 'b', 'blockquote', 'br', 'button',
-  'caption', 'cite', 'code', 'col', 'colgroup', 'dd', 'del', 'details', 'dfn', 'div',
-  'dl', 'dt', 'em', 'embed', 'figcaption', 'figure', 'footer', 'h1', 'h2', 'h3', 'h4',
-  'h5', 'h6', 'header', 'hr', 'i', 'iframe', 'img', 'input', 'ins', 'kbd', 'li', 'main',
-  'mark', 'nav', 'ol', 'p', 'picture', 'pre', 'q', 's', 'samp', 'section', 'small',
-  'source', 'span', 'strong', 'sub', 'summary', 'sup', 'table', 'tbody', 'td', 'tfoot',
-  'th', 'thead', 'time', 'tr', 'track', 'u', 'ul', 'var', 'video', 'wbr',
+  'a',
+  'abbr',
+  'address',
+  'article',
+  'aside',
+  'audio',
+  'b',
+  'blockquote',
+  'br',
+  'button',
+  'caption',
+  'cite',
+  'code',
+  'col',
+  'colgroup',
+  'dd',
+  'del',
+  'details',
+  'dfn',
+  'div',
+  'dl',
+  'dt',
+  'em',
+  'embed',
+  'figcaption',
+  'figure',
+  'footer',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'header',
+  'hr',
+  'i',
+  'iframe',
+  'img',
+  'input',
+  'ins',
+  'kbd',
+  'li',
+  'main',
+  'mark',
+  'nav',
+  'ol',
+  'p',
+  'picture',
+  'pre',
+  'q',
+  's',
+  'samp',
+  'section',
+  'small',
+  'source',
+  'span',
+  'strong',
+  'sub',
+  'summary',
+  'sup',
+  'table',
+  'tbody',
+  'td',
+  'tfoot',
+  'th',
+  'thead',
+  'time',
+  'tr',
+  'track',
+  'u',
+  'ul',
+  'var',
+  'video',
+  'wbr',
 ])
 
 /** Frontmatter keys the Velite schema accepts. Anything else is silently stripped. */
@@ -46,19 +113,24 @@ export const SCHEMA_KEYS = new Set([
   'authors',
   'layout',
   'bibliography',
+  'draft',
 ])
 
-/** Keys every post inherited from the starter template that no longer do anything. */
-export const DEAD_KEYS = new Set(['draft', 'tags'])
+/** Keys inherited from the starter template that no longer do anything. */
+export const DEAD_KEYS = new Set(['tags'])
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/
 
 /**
- * Check a frontmatter date field.
+ * Check a frontmatter date field against what Velite actually accepts.
  *
- * An unquoted YAML date is parsed into a JS Date before it reaches us, so it is a valid
- * date — just not a verbatim string. That earns a nudge to quote it, not an error. A
- * string that is not YYYY-MM-DD is a real failure: s.isodate() rejects it.
+ * s.isodate() is:
+ *   stringType().refine(v => !isNaN(Date.parse(v))).transform(v => new Date(v).toISOString())
+ *
+ * So the only hard requirement is that Date.parse succeeds — '2024-06-04 00:00:00' is
+ * accepted and normalized, as three of the 2024 posts demonstrate. Anything parseable but
+ * not plain YYYY-MM-DD is a house-style nudge, not a build failure. Being stricter here
+ * than the schema would flag working posts, which is how a validator gets ignored.
  */
 function checkDate(value, field) {
   if (value instanceof Date) {
@@ -73,17 +145,27 @@ function checkDate(value, field) {
         )
   }
 
-  if (!ISO_DATE.test(String(value))) {
+  const text = String(value)
+
+  if (ISO_DATE.test(text)) return null
+
+  if (Number.isNaN(Date.parse(text))) {
     return finding(
       'error',
       'date-format',
       1,
-      `\`${field}\` is "${value}"; s.isodate() needs YYYY-MM-DD.`,
-      'Quote it in YAML so it is not coerced into a timestamp.'
+      `\`${field}\` is "${text}", which Date.parse cannot read; s.isodate() rejects it.`,
+      'Use YYYY-MM-DD.'
     )
   }
 
-  return null
+  return finding(
+    'warn',
+    'nonstandard-date',
+    1,
+    `\`${field}\` is "${text}". Velite accepts it and normalizes to ISO, but posts here use YYYY-MM-DD.`,
+    `Consider '${new Date(text).toISOString().slice(0, 10)}'.`
+  )
 }
 
 /**
@@ -166,13 +248,23 @@ export function validatePost({ raw, filePath, knownAuthors }) {
 
   if (!data.title) {
     findings.push(
-      finding('error', 'required-field', 1, 'Missing `title`. Velite requires it; the build fails without it.')
+      finding(
+        'error',
+        'required-field',
+        1,
+        'Missing `title`. Velite requires it; the build fails without it.'
+      )
     )
   }
 
   if (!data.date) {
     findings.push(
-      finding('error', 'required-field', 1, 'Missing `date`. Velite requires it; the build fails without it.')
+      finding(
+        'error',
+        'required-field',
+        1,
+        'Missing `date`. Velite requires it; the build fails without it.'
+      )
     )
   } else {
     const dateFinding = checkDate(data.date, 'date')
@@ -186,7 +278,12 @@ export function validatePost({ raw, filePath, knownAuthors }) {
 
   if (!data.summary) {
     findings.push(
-      finding('warn', 'missing-summary', 1, 'No `summary`. Post listings will have nothing to show.')
+      finding(
+        'warn',
+        'missing-summary',
+        1,
+        'No `summary`. Post listings will have nothing to show.'
+      )
     )
   }
 
@@ -226,6 +323,20 @@ export function validatePost({ raw, filePath, knownAuthors }) {
     }
   }
 
+  // Held-back posts are legitimate, but it is worth saying out loud — a draft that was
+  // meant to ship looks identical to one that was not.
+  if (data.draft === true) {
+    findings.push(
+      finding(
+        'warn',
+        'draft-post',
+        1,
+        '`draft: true` — this post is excluded from listings, its own route, the sitemap, and RSS.',
+        'Set it to false (or remove the key) when you are ready to publish.'
+      )
+    )
+  }
+
   for (const key of Object.keys(data)) {
     if (DEAD_KEYS.has(key)) {
       findings.push(
@@ -234,14 +345,17 @@ export function validatePost({ raw, filePath, knownAuthors }) {
           'dead-frontmatter',
           1,
           `\`${key}:\` is not in the Velite schema and is not read anywhere in the codebase.`,
-          key === 'draft'
-            ? 'Nothing honors it — `draft: true` still publishes. Do not rely on it.'
-            : 'Silently stripped at build time; the tag UI was removed.'
+          'Silently stripped at build time; the tag UI was removed.'
         )
       )
     } else if (!SCHEMA_KEYS.has(key)) {
       findings.push(
-        finding('warn', 'unknown-frontmatter', 1, `\`${key}:\` is not in the Velite schema and will be stripped.`)
+        finding(
+          'warn',
+          'unknown-frontmatter',
+          1,
+          `\`${key}:\` is not in the Velite schema and will be stripped.`
+        )
       )
     }
   }
@@ -390,14 +504,15 @@ function main(argv) {
     }
   }
 
-  console.log(
-    `\n  ${files.length} file(s): ${errors} error(s), ${warnings} warning(s)\n`
-  )
+  console.log(`\n  ${files.length} file(s): ${errors} error(s), ${warnings} warning(s)\n`)
 
   return errors > 0 ? 1 : 0
 }
 
 // Only run the CLI when executed directly, so tests can import the module cleanly.
-if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(import.meta.url).pathname)) {
+if (
+  process.argv[1] &&
+  path.resolve(process.argv[1]) === path.resolve(new URL(import.meta.url).pathname)
+) {
   process.exit(main(process.argv.slice(2)))
 }
