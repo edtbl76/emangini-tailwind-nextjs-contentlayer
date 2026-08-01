@@ -90,6 +90,30 @@ to use it. Behavior and the prose describing it have to move in the same commit.
 - **lint-staged fails on partially-staged files.** When prettier rewrites a file that has
   both staged and unstaged changes, restoring the unstaged half hits a merge conflict and
   the whole commit reverts. Run prettier first, or stage the file whole.
+
+### Dependabot (2026-08-01)
+
+**Most of the 59 alerts were an artifact of the duplicate lockfile.** 36 were against
+`package-lock.json` — already untracked in `5c686c2`, so they close when `develop` merges.
+Only 23 were real, across 33 unique advisories. **Count alerts per manifest before
+estimating the work**; the headline number was inflated ~2.5x by a file that no longer
+exists.
+
+**`next` was 13 of the 23.** A single patch bump (15.5.18 → 15.5.21) cleared 8 CVEs. The
+skew mattered too: `eslint-config-next` and `@next/bundle-analyzer` sat at **14.2.3** while
+next was on 15 — a major behind, dragging vulnerable `glob@10.3.10` with them.
+
+**`resolutions.sharp = ^0.35.0` is deliberate; do not remove it casually.** Both `next`
+(`^0.34.3`) and `velite` (`^0.34.5`) cap sharp below the patched 0.35.0, so the override is
+the only way to get the libvips fixes. Revisit once both widen their ranges. Verified
+working rather than assumed: sharp encodes, the build passes, and `/_next/image` returns a
+resized WebP.
+
+**Optional follow-up:** `next.config.js` allows `picsum.photos` in `remotePatterns`, used
+only as a fallback in `layouts/PostBanner.tsx` — a layout no post selects, since none sets
+`layout:`. It remains a live third-party proxy target via `/_next/image`. Removing it would
+close the untrusted-input path that made the sharp advisory relevant here at all.
+
 - **Node is not on the non-login `PATH`** in this environment; it resolves via nvm
   (`v25.6.1`). `yarn` works from an interactive shell.
 - **Node 25's test runner rejects a bare directory** — `node --test scripts/` fails; it
