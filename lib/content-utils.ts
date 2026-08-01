@@ -1,5 +1,17 @@
 export type CoreContent<T> = Omit<T, 'body'>
 
+/**
+ * Posts that belong on the site.
+ *
+ * `draft: true` holds a post back from every surface: listings, pagination, its own
+ * route, the sitemap, and the RSS feed. Filtering lives here rather than at each call
+ * site so a new surface cannot quietly forget to check — which is exactly how the flag
+ * came to be decorative in the first place.
+ */
+export function publishedPosts<T extends { draft?: boolean }>(posts: T[]): T[] {
+  return posts.filter((post) => !post.draft)
+}
+
 export function sortPosts<T extends { date: string }>(posts: T[]): T[] {
   return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 }

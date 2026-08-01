@@ -15,6 +15,12 @@ function sortPosts(posts) {
   return [...posts].sort((a, b) => new Date(b.date) - new Date(a.date))
 }
 
+// Mirrors publishedPosts() in lib/content-utils.ts. Duplicated rather than imported
+// because this script runs standalone under node and cannot load the TypeScript module.
+function publishedPosts(posts) {
+  return posts.filter((post) => !post.draft)
+}
+
 const generateRssItem = (config, post) => `
   <item>
     <guid>${config.siteUrl}/blog/${post.slug}</guid>
@@ -43,7 +49,7 @@ const generateRss = (config, posts, page = 'feed.xml') => `
 `
 
 async function generateRSS(config) {
-  const posts = sortPosts(blogs)
+  const posts = sortPosts(publishedPosts(blogs))
   if (posts.length > 0) {
     const rss = generateRss(config, posts)
     writeFileSync('./public/feed.xml', rss)

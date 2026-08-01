@@ -1,5 +1,5 @@
 import ListLayout from '@/layouts/ListLayout'
-import { allCoreContent, sortPosts } from '@/lib/content-utils'
+import { allCoreContent, sortPosts, publishedPosts } from '@/lib/content-utils'
 import { blogs } from '@/content'
 import { genPageMetadata } from 'app/seo'
 
@@ -8,7 +8,7 @@ const POSTS_PER_PAGE = 12
 export const metadata = genPageMetadata({ title: 'Blog' })
 
 export default function BlogPage() {
-  const posts = allCoreContent(sortPosts(blogs))
+  const posts = allCoreContent(sortPosts(publishedPosts(blogs)))
   const pageNumber = 1
   const initialDisplayPosts = posts.slice(
     POSTS_PER_PAGE * (pageNumber - 1),

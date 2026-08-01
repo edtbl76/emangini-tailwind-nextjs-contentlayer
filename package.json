@@ -8,12 +8,15 @@
     "build": "cross-env INIT_CWD=$PWD next build && cross-env NODE_OPTIONS='--experimental-json-modules' node ./scripts/postbuild.mjs",
     "serve": "next start",
     "analyze": "cross-env ANALYZE=true next build",
+    "validate": "node scripts/validate-post.mjs",
+    "validate:all": "node scripts/validate-post.mjs data/blog/*/*.mdx",
+    "test": "node --test 'scripts/*.test.mjs'",
     "lint": "next lint --fix --dir pages --dir app --dir components --dir lib --dir layouts --dir scripts",
     "prepare": "husky"
   },
   "dependencies": {
     "@headlessui/react": "1.7.19",
-    "@next/bundle-analyzer": "14.2.3",
+    "@next/bundle-analyzer": "15.5.21",
     "@tailwindcss/forms": "^0.5.7",
     "@tailwindcss/typography": "^0.5.12",
     "autoprefixer": "^10.4.13",
@@ -50,11 +53,11 @@
     "@types/mdx": "^2.0.12",
     "@types/node": "^25.5.0",
     "@types/react": "^18.2.73",
-    "@typescript-eslint/eslint-plugin": "^6.1.0",
-    "@typescript-eslint/parser": "^6.1.0",
+    "@typescript-eslint/eslint-plugin": "^8.65.0",
+    "@typescript-eslint/parser": "^8.65.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.45.0",
-    "eslint-config-next": "14.2.3",
+    "eslint-config-next": "15.5.21",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^5.0.0",
     "husky": "^9.0.0",
@@ -71,5 +74,8 @@
       "prettier --write"
     ]
   },
-  "packageManager": "yarn@3.6.1"
+  "packageManager": "yarn@3.6.1",
+  "resolutions": {
+    "sharp": "^0.35.0"
+  }
 }
