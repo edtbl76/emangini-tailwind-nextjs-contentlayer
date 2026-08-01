@@ -114,6 +114,27 @@ the only way to get the libvips fixes. Revisit once both widen their ranges. Ver
 working rather than assumed: sharp encodes, the build passes, and `/_next/image` returns a
 resized WebP.
 
+**`resolutions.postcss = ^8.5.18` exists for the same reason, one layer down.** `next`
+declares `"postcss": "8.4.31"` — an **exact pin**, not a range — so Dependabot bumping the
+top-level to 8.5.25 left a second, vulnerable copy nested under next. Three alerts survived
+five Dependabot PRs for exactly this reason. **Dependabot can only raise what your own
+manifest declares; it cannot override what a dependency pins internally.** That is what
+`resolutions` is for, and the tell is two entries for one package in `yarn.lock`:
+
+```
+"postcss@npm:8.4.31":   -> 8.4.31   vulnerable
+"postcss@npm:^8.4.47":  -> 8.5.25   patched
+```
+
+Safe here because the generated CSS is **byte-identical** before and after (72,209 bytes,
+same SHA) — worth re-checking that way if the range ever moves, since postcss is the whole
+CSS pipeline rather than a leaf dependency.
+
+**A lockfile can disagree with its own `package.json`.** After the Dependabot merges, main's
+`yarn.lock` had no `postcss@npm:^8.5.18` descriptor even though `package.json` declared that
+range, so `yarn install --immutable` failed — CI using that flag would have broken. Reconciled
+here. **`yarn install --immutable` is the cheap check for it.**
+
 **Optional follow-up:** `next.config.js` allows `picsum.photos` in `remotePatterns`, used
 only as a fallback in `layouts/PostBanner.tsx` — a layout no post selects, since none sets
 `layout:`. It remains a live third-party proxy target via `/_next/image`. Removing it would
