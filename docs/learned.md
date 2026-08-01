@@ -91,6 +91,11 @@ to use it. Behavior and the prose describing it have to move in the same commit.
   both staged and unstaged changes, restoring the unstaged half hits a merge conflict and
   the whole commit reverts. Run prettier first, or stage the file whole.
 
+- **Node is not on the non-login `PATH`** in this environment; it resolves via nvm
+  (`v25.6.1`). `yarn` works from an interactive shell.
+- **Node 25's test runner rejects a bare directory** — `node --test scripts/` fails; it
+  needs a glob (`node --test 'scripts/*.test.mjs'`).
+
 ### Dependabot (2026-08-01)
 
 **Most of the 59 alerts were an artifact of the duplicate lockfile.** 36 were against
@@ -113,11 +118,6 @@ resized WebP.
 only as a fallback in `layouts/PostBanner.tsx` — a layout no post selects, since none sets
 `layout:`. It remains a live third-party proxy target via `/_next/image`. Removing it would
 close the untrusted-input path that made the sharp advisory relevant here at all.
-
-- **Node is not on the non-login `PATH`** in this environment; it resolves via nvm
-  (`v25.6.1`). `yarn` works from an interactive shell.
-- **Node 25's test runner rejects a bare directory** — `node --test scripts/` fails; it
-  needs a glob (`node --test 'scripts/*.test.mjs'`).
 
 ### Process note
 
