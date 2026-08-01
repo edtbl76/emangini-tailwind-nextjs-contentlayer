@@ -49,7 +49,7 @@ describe('DOI encoding — the regression from commit 974922b', () => {
   })
 
   test('accepts the percent-encoded DOI that fixed it', () => {
-    const fixedDoi = brokenDoi.replace('<', '%3C').replace('>', '%3E')
+    const fixedDoi = brokenDoi.replace(/</g, '%3C').replace(/>/g, '%3E')
     const findings = validatePost({ raw: post(fixedDoi), filePath: 'data/blog/2026/x.mdx' })
 
     assert.deepEqual(errorsOf(findings), [], 'encoded DOI must be clean')
