@@ -8,6 +8,9 @@
     "build": "cross-env INIT_CWD=$PWD next build && cross-env NODE_OPTIONS='--experimental-json-modules' node ./scripts/postbuild.mjs",
     "serve": "next start",
     "analyze": "cross-env ANALYZE=true next build",
+    "validate": "node scripts/validate-post.mjs",
+    "validate:all": "node scripts/validate-post.mjs data/blog/*/*.mdx",
+    "test": "node --test 'scripts/*.test.mjs'",
     "lint": "next lint --fix --dir pages --dir app --dir components --dir lib --dir layouts --dir scripts",
     "prepare": "husky"
   },
