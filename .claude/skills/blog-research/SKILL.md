@@ -8,6 +8,18 @@ description: Use when gathering sources for a blog post on this site — runs we
 Produces two things: working notes, and a reference list that can be pasted into a post
 without breaking it.
 
+## Prerequisite
+
+The working doc must contain a `## Hypothesis` section. Check with:
+
+```bash
+yarn stage docs/research/<slug>.md --require research
+```
+
+If it is missing, run `blog-hypothesis` first. **Research without a falsifiable claim finds
+only confirmation** — you gather what fits and never notice what does not. Do not back-fill
+a hypothesis afterwards; one written after the evidence always matches it.
+
 ## Output location
 
 ```
@@ -15,7 +27,7 @@ docs/research/<slug>.md
 ```
 
 Use the same snake_case slug the post will use. This directory is outside `data/`, so
-Velite never ingests it.
+Velite never ingests it. Append to the existing doc — the hypothesis is already there.
 
 ## Gathering
 
