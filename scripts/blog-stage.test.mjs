@@ -16,11 +16,19 @@ import { evaluate, blockers, headings, checkboxes, STAGES } from './blog-stage.m
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
-const doc = (sections, stageBlock = '') => `# Post\n\n${stageBlock}\n${sections.join('\n\n')}\n`
-const section = (name) => `## ${name}\n\nbody text`
+const doc = (sections, stageBlock = '') => `# Post
+
+${stageBlock}
+${sections.join('\n\n')}
+`
+const section = (name) => `## ${name}
+
+body text`
 
 const stageBlock = (ticked = []) =>
-  '## Stage\n\n' +
+  '## Stage
+
+' +
   STAGES.map((s) => {
     const label = s.name[0].toUpperCase() + s.name.slice(1)
     const gate = s.gated ? ' _(gate — human approval)_' : ''
