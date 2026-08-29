@@ -1,6 +1,6 @@
 ---
 name: blog-write
-description: Use when starting a new blog post for this site, or drafting post content — scaffolds data/blog/<year>/<slug>.mdx with schema-correct frontmatter and body conventions that survive MDX parsing. Trigger on "write a post", "new blog post", "draft a post about X", "start an essay".
+description: Use when starting a new blog post for this site, or drafting post content: scaffolds data/blog/<year>/<slug>.mdx with schema-correct frontmatter and body conventions that survive MDX parsing. Trigger on "write a post", "new blog post", "draft a post about X", "start an essay".
 ---
 
 # Write a blog post
@@ -14,7 +14,7 @@ data/blog/<year>/<slug>.mdx
 ```
 
 - `<year>` matches the year in `date`.
-- `<slug>` is **snake_case** — this is the established convention across all 6 published
+- `<slug>` is **snake_case**, the established convention across all 6 published
   posts (`harness_engineering`, `why_context_matters_in_learning`, `beyond_the_hype`).
   Not kebab-case. The slug becomes the URL path.
 
@@ -40,7 +40,7 @@ cleaning them up as a side effect of writing a new post.
 
 ### Holding a post back
 
-`draft: true` genuinely works — it excludes the post from listings, pagination, its own
+`draft: true` genuinely works: it excludes the post from listings, pagination, its own
 route, the sitemap, and RSS via `publishedPosts()` in `lib/content-utils.ts`.
 
 ```yaml
@@ -48,16 +48,16 @@ draft: true
 ```
 
 Add it while a post is in progress and remove it (or set `false`) to publish. Omitting the
-key entirely means published — the schema defaults it to `false`.
+key entirely means published; the schema defaults it to `false`.
 
 ### Optional keys
 
 `images: ['/static/images/x.png']` · `layout:` · `bibliography:`
-(`bibliography:` is wired up but unused — see `blog-research` for why citations are prose.)
+(`bibliography:` is wired up but unused; see `blog-research` for why citations are prose.)
 
 ## Body rules
 
-These exist because MDX failures here are silent — the post disappears from the site with
+These exist because MDX failures here are silent: the post disappears from the site with
 no build error.
 
 1. **Never leave a raw `<` in prose.** Escape as `\<`, wrap in backticks, or rewrite
@@ -66,14 +66,27 @@ no build error.
 3. **Only `Image` and `TOCInline` exist as components.** Any other capitalized tag is
    undefined at render time. Lowercase HTML (`<div>`, `<figure>`) passes through fine.
 4. **No HTML comments.** `<!-- -->` is invalid MDX; use `{/* ... */}`.
-5. **Code samples belong in fenced blocks** — the validator exempts them, so `<` inside a
+5. **Code samples belong in fenced blocks**: the validator exempts them, so `<` inside a
    fence is safe.
+
+## House style
+
+**Never use an em dash.** This one is not an MDX constraint, it is a standing rule, and
+`yarn validate` enforces it as an `em-dash` error.
+
+Reach for a colon when the second half explains the first, a comma when the aside is light,
+and a full stop when the aside is doing real work. An en dash or a double hyphen reads the
+same way on the page and is not a fix.
+
+Eight posts published before the rule still contain them. They are grandfathered in
+`EM_DASH_GRANDFATHERED` in `scripts/validate-post.mjs` and are left alone on purpose. Do not
+rewrite them, and do not add to that list.
 
 ## Structure
 
 Follow the shape of the existing long-form essays: an H1-less opening (the `title`
 frontmatter renders the heading), a short framing section, then `---` separated movements.
-Reference lists go at the end as APA prose — see `blog-research`.
+Reference lists go at the end as APA prose; see `blog-research`.
 
 ## Before finishing
 
@@ -82,7 +95,7 @@ yarn validate data/blog/<year>/<slug>.mdx
 ```
 
 Fix every error. Do not hand the post back with known errors, and do not report it as done
-until validation is clean — a post with a raw `<` looks fine in the editor and is invisible
+until validation is clean. A post with a raw `<` looks fine in the editor and is invisible
 on the site.
 
 ## Next step

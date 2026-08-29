@@ -1,6 +1,6 @@
 ---
 name: blog-research
-description: Use when gathering sources for a blog post on this site — runs web research and produces a ready-to-paste APA reference list with DOIs pre-encoded so they survive MDX. Trigger on "research a post about X", "find sources for", "gather references", before drafting a long-form essay.
+description: Use when gathering sources for a blog post on this site: runs web research and produces a ready-to-paste APA reference list with DOIs pre-encoded so they survive MDX. Trigger on "research a post about X", "find sources for", "gather references", before drafting a long-form essay.
 ---
 
 # Research sources for a post
@@ -17,7 +17,7 @@ yarn stage docs/research/<slug>.md --require research
 ```
 
 If it is missing, run `blog-hypothesis` first. **Research without a falsifiable claim finds
-only confirmation** — you gather what fits and never notice what does not. Do not back-fill
+only confirmation**: you gather what fits and never notice what does not. Do not back-fill
 a hypothesis afterwards; one written after the evidence always matches it.
 
 ## Output location
@@ -27,7 +27,7 @@ docs/research/<slug>.md
 ```
 
 Use the same snake_case slug the post will use. This directory is outside `data/`, so
-Velite never ingests it. Append to the existing doc — the hypothesis is already there.
+Velite never ingests it. Append to the existing doc; the hypothesis is already there.
 
 ## Gathering
 
@@ -36,7 +36,7 @@ Prefer primary sources: the paper over the summary, the filing over the press re
 the original post over the aggregator.
 
 For each source record: author(s), year, exact title, publication, URL, DOI if one exists.
-Capture these while reading — reconstructing a citation later is where errors enter.
+Capture these while reading. Reconstructing a citation later is where errors enter.
 
 ## Citation format
 
@@ -55,7 +55,7 @@ Zadeh, L. A. (1965). Fuzzy sets. Information and Control, 8(3), 338–353. https
 
 Disambiguate same-author-same-year with letter suffixes (`2025a`, `2025b`), ordered by date.
 
-### Encode DOIs — this is the one that has actually broken the site
+### Encode DOIs: this is the one that has actually broken the site
 
 A raw `<` anywhere in the post makes MDX parse it as a JSX tag and the entire post
 disappears with **no build error**. Legacy SICI DOIs contain angle brackets routinely:
@@ -66,7 +66,7 @@ GOOD  https://doi.org/10.1002/(SICI)1097-0266(199708)18:7%3C509::AID-SMJ882%3E3.
 ```
 
 `<` → `%3C`, `>` → `%3E`. The encoded URL resolves identically. This shipped broken once
-already (commit `974922b`) — encode every DOI as you write it, not as a cleanup pass.
+already (commit `974922b`). Encode every DOI as you write it, not as a cleanup pass.
 
 ### Mark what you could not verify
 

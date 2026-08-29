@@ -313,6 +313,63 @@ describe('maskNonProse', () => {
   })
 })
 
+describe('em dashes (house style)', () => {
+  test('flags an em dash in prose as an error', () => {
+    const findings = validatePost({
+      raw: post('The layers transfer — the choices do not.'),
+      filePath: 'data/blog/2026/x.mdx',
+    })
+    const errors = errorsOf(findings)
+
+    assert.equal(errors.length, 1)
+    assert.equal(errors[0].rule, 'em-dash')
+    assert.match(errors[0].hint, /colon/)
+  })
+
+  test('flags every occurrence, not just the first on a line', () => {
+    const findings = validatePost({
+      raw: post('One — two — three.'),
+      filePath: 'data/blog/2026/x.mdx',
+    })
+
+    assert.equal(errorsOf(findings).length, 2)
+  })
+
+  test('ignores em dashes inside code fences and inline spans', () => {
+    const body = [
+      'Prose with no dash.',
+      '',
+      '`inline — span`',
+      '',
+      '```',
+      'fenced — block',
+      '```',
+    ].join('\n')
+
+    const findings = validatePost({ raw: post(body), filePath: 'data/blog/2026/x.mdx' })
+
+    assert.equal(rulesOf(findings).includes('em-dash'), false)
+  })
+
+  test('stays silent on grandfathered posts', () => {
+    const findings = validatePost({
+      raw: post('An em dash — in a post that already shipped.'),
+      filePath: 'data/blog/2024/ghosts.mdx',
+    })
+
+    assert.equal(rulesOf(findings).includes('em-dash'), false)
+  })
+
+  test('grandfathering survives an absolute path', () => {
+    const findings = validatePost({
+      raw: post('An em dash — in a post that already shipped.'),
+      filePath: `${repoRoot}/data/blog/2024/ghosts.mdx`,
+    })
+
+    assert.equal(rulesOf(findings).includes('em-dash'), false)
+  })
+})
+
 describe('the real corpus', () => {
   // Every year, not just the recent ones. Checking only 2025-2026 hid a false positive in
   // the 2024 posts for a full round of work — a rule is only trustworthy against all of it.

@@ -51,3 +51,15 @@ yarn-error.log*
 /package-lock.json
 .worktrees
 .velite
+
+# AI-DLC framework: local only, not part of this repo.
+# Everything under .claude/ is ignored except the blog pipeline skills and
+# distill-doc, which are this project's actual tooling and stay tracked.
+.claude/*
+!.claude/skills/
+.claude/skills/*
+!.claude/skills/blog-*/
+!.claude/skills/distill-doc/
+
+# AI-DLC workspace (state, memory, audit, per-user cursors, runtime scratch).
+/aidlc/

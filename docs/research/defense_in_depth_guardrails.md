@@ -1,12 +1,21 @@
-# Defense-in-Depth Guardrails — Four Complementary Layers for LLM Applications
+# Defense-in-Depth Guardrails: Four Complementary Layers for LLM Applications
 
 ## Stage
 
-- [x] Hypothesis _(retroactive — see note)_
+- [x] Hypothesis _(retroactive, see note)_
 - [x] Research
-- [x] Thesis _(gate — human approved 2026-08-10)_
-- [ ] Outline
-- [ ] Draft
+- [x] Thesis _(gate. Rewritten and human-approved 2026-08-27 per D7. The 2026-08-11 version
+      is retained below as history)_
+- [x] Outline _(rebuilt 2026-08-27 on the D7 thesis, in five parts following the three
+      evidence roles plus the count. The Minto exec-summary shape carries over; the earlier
+      2026-08-27 pyramid and the 2026-08-11 version are retained below as history)_
+- [x] Draft _(full draft 2026-08-27, 37,037 chars, 11 sections, validates clean, behind
+      `draft: true` pending review. The 2026-08-10 draft was discarded. It was written against
+      the pre-2026-08-11 outline
+      and carried three superseded claims: a "tier" section against D1, "Structure is the layer
+      nobody sells you" after the thesis demoted it, and the 1B to 8B escalation as a live
+      argument. §1 of a fresh draft exists at `data/blog/2026/defense_in_depth_guardrails.md`
+      behind `draft: true`)_
 
 > **Ordering note.** This hypothesis was written on 2026-08-10, after the research it is
 > supposed to precede. That is backwards and it is recorded as such rather than hidden. It
@@ -253,6 +262,189 @@ with either a separate judge model or the guarded model itself. So the fallback 
 first-class and supported. Strength: strong for _the alternative being supported_; the
 claim that Colang rails misfire is the author's own observation (see Gaps).
 
+### The alternatives, researched properly (2026-08-11)
+
+Commissioned after a draft named competing tools without ever researching them. Listing
+names harvested from another paper's bibliography is not a comparison. Two independent
+benchmarks now supply real numbers, and **both damage claims the draft was resting on.**
+
+#### Classify: independent benchmarking contradicts the escalation argument
+
+Harsh, Sarmah & Pasquali (2026) benchmarked **14 open source safety guard models** against
+79,331 samples aggregated from HarmBench, StrongREJECT, RealToxicityPrompts and BeaverTails,
+across eight safety categories. Reported recall and precision:
+
+| Model                   | Recall     | Precision  |
+| ----------------------- | ---------- | ---------- |
+| Qwen Guard (4B)         | **83.97%** | 68.79%     |
+| Nemotron Safety (8B)    | 77.25%     | 74.93%     |
+| WildGuard (7B)          | 73.83%     | 72.89%     |
+| ShieldGemma (2B)        | 45.49%     | **82.20%** |
+| **Llama Guard (12B)**   | **33.32%** | 78.51%     |
+| GPT-OSS Safeguard (20B) | 24.86%     | 80.68%     |
+
+Also benchmarked: MD-Judge (7B), Granite Guardian (8B), DynaGuard (8B), DuoGuard (0.5B),
+GuardReasoner (3B), and three encoder only models, EthicalEye (270M), PoliteGuard (110M),
+MetaHateBERT (110M).
+
+**Two findings that hit this stack directly.**
+
+1. **Llama Guard, the tool in the Classify layer, records the second worst recall in the
+   study at 33.32%.** The authors state that "while ShieldGemma achieves highest precision
+   (82.20%), it misses 54.51% of unsafe content, and GPT-OSS Safeguard misses 75.14%." Llama
+   Guard sits in that same conservative band. The paper argues recall is the metric that
+   matters for safety work, since a miss is worse than a false alarm.
+2. **Model size does not predict recall.** "The Pearson correlation between log10-transformed
+   model size and recall is negligible (r=0.21, p=0.48, n=14)." That is a direct contradiction
+   of the draft's escalation argument, which rested on Meta's own F1 figures (0.899 for 1B
+   against 0.939 for 8B) to justify spending more compute for a better verdict. **Vendor
+   reported F1 on a private benchmark said bigger is better; an independent benchmark across
+   14 models says size explains almost nothing.**
+
+⚠ **Caveats that must travel with these numbers.** The benchmark aggregates four datasets
+into eight categories of its own; Llama Guard is trained against the MLCommons taxonomy, and
+a guard evaluated on a taxonomy it was not built for will under-report. That is a real
+confound and it is not a full excuse, because the same is true for every model in the table.
+The paper is arXiv, April 2026, and I have not confirmed peer review. Do not present it as
+settled, and do not suppress it either.
+
+**What this does to the article.** The Classify section cannot recommend Llama Guard on
+vendor F1 and move on. The honest version reports that the tool this stack runs performs
+poorly on the one independent benchmark found, names Qwen Guard as the recall leader, and
+treats the precision and recall split as the actual decision the reader has to make. It also
+weakens the 1B to 8B escalation story, which should now be presented as what it is: a vendor
+claim that independent work does not support.
+
+#### Structure: the market is not thin, it is a different industry
+
+The draft claimed Structure is "the layer nobody sells you." **That is wrong as written.**
+There is a substantial and competitive market; it simply does not sit inside guardrail
+products, which is a different and more interesting claim.
+
+Two mechanisms, not one:
+
+- **Validate then retry**, which is what Guardrails AI does, and what Instructor and BAML
+  do. The model generates freely, the output is checked against a schema, and a failure
+  triggers a re-ask. Instructor is the popular one, reported at 11K GitHub stars and over
+  3M monthly downloads, wrapping provider SDKs with Pydantic validation. BAML is MIT
+  licensed and exists partly because strict JSON parsers choke on markdown wrapped output
+  and reasoning preambles. ⚠ Those adoption figures come from a secondary summary, not from
+  the projects, and need confirming before use.
+- **Constrain during generation**, which is a fundamentally different intervention: invalid
+  tokens are masked at decode time so malformed output cannot be produced at all. Geng et al.
+  (2025) benchmark six such engines, Guidance, Outlines, llama.cpp, XGrammar, OpenAI and
+  Gemini, against 10K real world JSON schemas plus the official JSON Schema Test Suite. ⚠ I
+  could not extract per engine numbers from the abstract, and the claims circulating about
+  Outlines having the lowest compliance and very long compilation times come from a secondary
+  blog. Fetch the full paper before citing any figure.
+
+⚠ **One further claim worth confirming:** XGrammar is reported as the default structured
+generation backend for vLLM, SGLang and TensorRT-LLM as of March 2026. If that holds, then
+Structure is not merely sold, it ships switched on inside the most widely used inference
+servers, which would be the strongest possible refutation of the "nobody sells it" line.
+Secondary source only so far.
+
+**What this does to the article.** The Structure section needs rewriting rather than
+tweaking. The defensible claim is narrower and sharper: **no guardrail platform bundles
+Structure, while a separate and healthy tooling ecosystem solves it, and the two worlds
+barely reference each other.** That is a real observation about how the market is carved up,
+and it survives contact with the evidence. "Nobody sells you the fourth layer" does not.
+
+#### The Classify evidence base, four decision factors (2026-08-11)
+
+Built after the author noted that one paper is not a body of evidence, and that quality is
+only one of four factors. The others are cost, availability, and deployability on the
+hardware and in the time actually available.
+
+**Methodological warning that must survive into any comparison.** Harsh et al. and Young
+are different benchmarks with different prompts, categories, and scoring. **Their numbers
+cannot be merged into one ranking.** Read them as two independent views that happen to
+disagree, which is the most useful thing about having both.
+
+| Model             | Publisher | Sizes        | Recall / Precision (Harsh) | Generalization (Young)                                                                 |
+| ----------------- | --------- | ------------ | -------------------------- | -------------------------------------------------------------------------------------- |
+| Qwen3Guard        | Alibaba   | 0.6B, 4B, 8B | 83.97 / 68.79 (4B)         | **collapses: 91.0% to 33.8% on unseen attacks, a 57.2 point gap (8B)**                 |
+| Nemotron Safety   | NVIDIA    | 8B           | 77.25 / 74.93              | tested; emitted harmful content in some conditions                                     |
+| WildGuard         | AI2       | 7B           | 73.83 / 72.89              | not in Young's set                                                                     |
+| Granite Guardian  | IBM       | 5B, 8B       | not in Harsh's top table   | **best generalization, 6.5% decline**; also emitted harmful content in some conditions |
+| ShieldGemma       | Google    | 2B, 9B       | 45.49 / 82.20              | not in Young's set                                                                     |
+| Llama Guard       | Meta      | 1B, 8B, 12B  | 33.32 / 78.51 (12B)        | not in Young's set                                                                     |
+| GPT-OSS Safeguard | OpenAI    | 20B          | 24.86 / 80.68              | not in Young's set                                                                     |
+
+**Quality: the two benchmarks disagree in a way that matters.** Harsh et al. rank by recall
+and Qwen3Guard wins. Young tests generalization to unseen adversarial prompts and Qwen3Guard
+is the one that falls apart, 91.0% down to 33.8%, while Granite Guardian holds within 6.5%.
+Young's conclusion is explicit: "generalization ability, not overall accuracy, should be the
+primary metric for guardrail evaluation." **A switch justified purely on Harsh's recall table
+would land on the model Young singles out as the most brittle.** That is the strongest single
+argument for not moving fast here.
+
+Also from Young, and genuinely alarming for any of these as a _guard_: Nemotron Safety and
+Granite Guardian were observed **generating harmful content rather than blocking it** under
+certain conditions. A guard model that can be induced to emit the thing it is meant to catch
+is a different risk class than one that merely misses.
+
+Liu et al. (2024, ICLR 2025) add a third view across 9 guard models and 12 benchmarks:
+guard models are **overconfident**, become **significantly miscalibrated under jailbreak
+attack**, and show limited robustness across response models. Temperature scaling and
+contextual calibration help. This is the paper that says the confidence score coming out of
+any of these should not be trusted as a probability.
+
+**Availability and licensing.** Qwen3Guard is the standout: Apache 2.0, stated in the
+technical report as covering all models, in three sizes, with 119 languages. Llama Guard
+carries the Llama Community License with its monthly active user ceiling, which is a real
+constraint for some deployments and a non-issue for a lab.
+
+⚠ **Do not repeat my error here.** For ShieldGemma and Granite Guardian I have only
+confirmed the **paper** licenses (CC BY 4.0), which say nothing about the model weights.
+Gemma models ship under Gemma Terms of Use, not a standard open source licence, and IBM's
+Granite weights are commonly Apache 2.0 but I have not confirmed it for Guardian
+specifically. **Confirm weight licences from the model cards before any of this is written
+down as fact.**
+
+**Deployability, which is where the shortlist really narrows.**
+
+- **Qwen3Guard ships two architectures, not one.** Generative, which frames classification
+  as instruction following and gives the tri-class safe / controversial / unsafe judgment,
+  and **Stream, which does token level classification during generation**. The Stream variant
+  is a genuinely different deployment shape and suits real time monitoring rather than a
+  request boundary check.
+- **The 0.6B size is the interesting one for a CPU default tier.** It is the only sub-1B
+  option in this set aside from DuoGuard, and it is what makes a like for like swap against
+  a small CPU model plausible at all.
+- **Granite Guardian covers RAG groundedness, context relevance, and answer relevance**
+  alongside content harms. That overlaps the NLI grounding component in Scan. Worth noting
+  that adopting it could collapse part of two layers into one tool, which is exactly the
+  layer versus tool distinction the article is about.
+- ⚠ **VRAM figures are secondary sourced and must be confirmed:** Llama Guard 3 8B around
+  4.9 GB, ShieldGemma 9B around 5.8 GB, Granite Guardian 3.3 8B around 6.7 GB, all quantized.
+  GGUF at Q4_K_M is reported to cut VRAM roughly 75% against FP16. CPU inference is reported
+  at single digit tokens per second, which matters less than it sounds for a guard emitting a
+  handful of tokens, but should be measured rather than assumed.
+
+**Cost.** No source in this pass priced these models per request or per GPU hour. What the
+evidence supports is narrower and still useful: **size does not buy recall** (Harsh et al.
+report r=0.21, p=0.48, n=14 between log model size and recall), so the cheapest defensible
+configuration is not obviously worse than the expensive one. That is a cost argument built
+on quality evidence rather than a price list.
+
+**Where this leaves the tooling decision.** Not a clean answer, which is itself the finding.
+Qwen3Guard wins on recall, licence, size range, and language coverage, and loses badly on
+generalization to novel attacks. Granite Guardian wins on generalization and covers grounding
+too, and has been seen emitting harmful content. Llama Guard, the incumbent, is poor on
+recall in the one large benchmark that includes it and untested in the generalization study.
+**No published evidence resolves this for a specific stack; a replay against real shadow
+traffic would.**
+
+#### Scan and Dialog: still under-researched, flagged not fudged
+
+LlamaFirewall, OpenGuardrails, Azure Prompt Shields and Bedrock filters have been read only
+at the level of what they claim to cover. No independent benchmark comparing them was found
+in this pass. Dialog alternatives are thinner still: Bedrock denied topics is documented,
+and "write your own topical judge" is not a product anyone benchmarks. **The article should
+either compare Scan and Dialog on capability only, saying plainly that no comparative
+evidence was found, or omit the comparison for those two rather than implying one exists.**
+
 ## Gaps
 
 - **⚠ The Guardrails AI `click` pin claim is unverified.** The draft states Guardrails AI
@@ -324,6 +516,45 @@ validate whether a response complies with logical policies expressed in natural 
 that is not JSON schema conformance, and no re-ask repair loop is documented. Structure
 remains unbundled across every platform examined — worth noting as the layer the market has
 not absorbed.
+
+### Wang & Li (2025) read in full, 2026-08-27. Gate closed.
+
+Read at v2 (29 Oct 2025), full text including Table 1 through Table 4. The abstract-level
+sourcing debt is closed, and the claim it carries at §7 came back **stronger** than the
+abstract supported, along with two corrections.
+
+**The money quote, and it is the authors' own bullet list of what the platform provides
+(p. 2).** Immediately after "A unified large model for both content-safety and
+model-manipulation detection," the very next bullet reads:
+
+> "A separate lightweight NER/data-redaction pipeline for identifying and masking sensitive
+> information."
+
+**The paper with "Unified" in its title ships a separate pipeline for the third job.** It
+merged two of the seams into one model and states plainly that it could not, or chose not to,
+merge the third. §3.3 confirms the scope of the merge: "Both content-safety and
+model-manipulation detection are handled by the same LLM, unlike multi-model pipelines." Two
+jobs merged, one kept out, Dialog and Structure absent entirely. This is the answer to path
+dependence in the authors' own words rather than in my reading of their eval tables.
+
+**Correction 1: the paper does not benchmark against NeMo Guardrails.** Earlier notes and the
+outline said it benchmarks "against Llama Guard and NeMo." The comparison in Table 1 covers
+Qwen3Guard, LlamaFirewall, PromptGuard 2 and OpenAI Moderation only. The eval tables include
+**NemoGuard-8B**, which is NVIDIA's content-safety classifier, not NeMo Guardrails, the Colang
+dialog framework (Rebedea et al., 2023). Conflating them would have put a Dialog-layer tool in
+a Classify-layer comparison and quietly weakened the claim that Dialog is absent here. Do not
+repeat it.
+
+**Correction 2, and it is new evidence for §3.** Table 2 (English Prompt Results, F1):
+**LlamaGuard3-8B averages 76.2 while LlamaGuard4-12B averages 72.4.** The newer, larger model
+scores lower. This is an independent corroboration of Harsh et al.'s r=0.21, p=0.48, n=14
+finding that size does not predict recall, arriving from a different benchmark suite and a
+different research group. It also further undercuts the retired 1B to 8B escalation argument.
+OpenGuardrails-Text-2510, at 3.3B quantized, averages 87.1 and tops the table.
+
+**Still true from the abstract read:** 119 languages, 14B compressed to 3.3B via GPTQ at over
+98% of benchmark accuracy, Apache 2.0. No topical control, no dialogue state, no schema or
+structured-output validation anywhere in the paper.
 
 **Corroborating consolidation elsewhere:**
 
@@ -511,10 +742,16 @@ now a deliberate, recorded position rather than an oversight.
 
 Accumulates across stages. Author decisions are binding on later stages.
 
-**D1 — Terminology: "layer," not "tier."** _(author, 2026-08-10)_ Use **layer** throughout
-the post and in the working doc. Reserve "tier" for escalation _within_ a layer, which is
-what the 1B→8B Llama Guard path actually is. This keeps the two axes verbally distinct:
-layers are horizontal, tiers are vertical inside one layer.
+**D1 — Terminology: "layer," and drop "tier" entirely.** _(author, amended 2026-08-11)_ Use
+**layer** throughout. **"Tier" is jettisoned and must not appear in the post.** Escalation
+within a layer, which is what the 1B→8B Llama Guard path is, gets described plainly instead
+("two models, one job") rather than given a term of its own. Only two words need defining
+for the reader: layer and tool.
+
+> Superseded wording, retained for the record: _"Reserve 'tier' for escalation within a
+> layer... layers are horizontal, tiers are vertical inside one layer."_ Introducing a third
+> term to distinguish two axes cost more than it bought, since the post only ever needs the
+> layer/tool distinction to do work.
 
 **D2 — Bedrock and OpenGuardrails are supporting evidence, not counter-evidence.**
 _(author, 2026-08-10; amended after Q2)_ Both are cited as **points on a public citation
@@ -581,201 +818,488 @@ and dissent are the intended output. This changes the register from "here is the
 architecture" to "here is the current state, and here is what would move it" — and it makes
 every open gap an invitation rather than an embarrassment.
 
+**D7. The piece proposes the four layers. It does not avow them, and it does not restate
+`harness_engineering`.** _(author, 2026-08-27)_ Two things came out together, and they were
+the same problem at two altitudes.
+
+The first is the framing "the layers transfer and the choices inside them do not." That is
+the previous article's thesis wearing guardrails clothing. It made this piece read as a
+sequel rather than as an argument about guardrails, and it kept surfacing: in the body, in
+three rejected titles, and in the summary. The second is the spine position that framing
+bought. `harness_engineering` drops from the load-bearing idea of the piece to at most one
+APA prose citation, placed where it is actually relevant and nowhere else.
+
+What replaces it is the process. The four layers are proposed on the strength of having
+built them, broken them in unpredicted ways, and then gone out to the literature and the tool
+landscape to find who else had landed in the same place. That is a weaker claim than the one
+it replaces, and it is the honest one: a proposal carries its own evidence and invites the
+counter-case, which is what D6 asked for and what the previous framing quietly prevented.
+
 ## Thesis
 
-**Sentence.** Guardrail architecture is converging in public on four layers — scan, classify,
-dialog, structure — and the citation trail shows something better than independent invention
-would: even the projects setting out to unify the layers keep them as distinguishable
-functions, which is the strongest evidence available that the seams belong to the problem
-rather than to anyone's product.
+**Sentence.** Guardrails decompose into layers rather than products, and four is where that
+decomposition currently looks stable: nothing on offer spans all four, and the projects that
+set out to unify them kept the seams anyway.
 
-**Delta from hypothesis.** **Widened, and the warrant was replaced.** The four layers
-themselves survived intact — that part is unchanged and the falsifier pass strengthened it.
-What moved is what the claim rests on. The hypothesis argued from the inside: _here is why
-each layer is necessary_, justified by one stack's experience and each tool's primary
-documentation. The thesis argues from the outside: _three teams with different constraints
-arrived at the same decomposition_, which is a stronger and more falsifiable kind of
-evidence. Three specific shifts drove it:
+**Delta from hypothesis.** **Replaced, for the third time.** The four layers have never
+moved. The warrant beneath them has now been rebuilt three times: first "here is why each
+layer is necessary," argued from one stack; then "three parties converged independently,"
+falsified when the citation trail showed they read each other; then "the layers transfer and
+the choices do not," which explained both halves with one mechanism but imported that
+mechanism wholesale from `harness_engineering`.
 
-1. The invalid tool-count falsifier was withdrawn (author correction), and re-reading its
-   evidence against the actual layer claim inverted the verdict from counter-evidence to
-   convergent evidence.
-2. Bedrock and OpenGuardrails moved from rivals to be dismissed into supporting bodies
-   (**D2**, **D4**).
-3. The audience widened. It was "the engineer choosing a guardrail product." It is now also
-   "the engineer already running three layers inside one console who cannot name them" —
-   layer illiteracy rather than layer absence.
+The trigger for this revision was not a research finding. It was reading the draft's opening
+and finding the previous article's thesis in it (D7). The claim now sits on the subject
+itself, and two things changed with it.
 
-**Second re-warranting (2026-08-10, after the open-question research).** The warrant moved
-again, and this time because research falsified part of it. "Independent convergence" is dead
-— Q2 established that OpenGuardrails benchmarks directly against Llama Guard and NeMo, and
-that Dong et al. (2024) had grouped the same three systems and reached "no single solution
-suffices" before this stack existed. The warrant is now **persistence under attempted
-unification**: the seams survive in the work of parties who read each other and who were
-actively trying to remove them. That is a narrower claim than independence and a sturdier
-one, because it is traceable — the citation trail is checkable by any reader, where
-independence never was.
+**The origin moved from the build to the investigation.** Earlier versions read as though the
+four layers came out of assembling a stack and were then confirmed by reading. That is
+backwards, and it is the same ordering error the hypothesis note already admits to at the top
+of this document. Surveying what the available tools actually do, and what falls between them,
+is what produced the decomposition. The build is one constrained instance of it.
 
-Net across both moves: the four layers have not changed since the hypothesis. What they rest
-on has been rebuilt twice, each time under contact with evidence.
+**The count became provisional.** This is the first version of the thesis in which four is a
+reading rather than a finding. Previous versions treated the number as settled and pushed the
+alternatives into an objection to be conceded. The count is now part of the argument the
+piece makes, with the case for three and the case for five stated on their own evidence.
 
-**Strongest unanswered objection.** **Path dependence.** The layers may persist not because
-the problem has these seams but because everyone inherited the same 2024 framing — Dong et
-al. grouped Llama Guard, NeMo, and Guardrails AI, and every subsequent system has been
-answering that grouping. Under this reading the seams are a convention the field locked in
-early, and their persistence measures the strength of the convention rather than the
-structure of the problem. This is sharper than the old independence objection because the
-citation trail, which is now the thesis's evidence, is _also_ the mechanism by which lock-in
-would propagate. The same trail supports both readings.
+**What the piece is.** A proposal carried by three kinds of evidence, each weak alone and
+each doing a different job. Keeping their roles straight is what stops the piece from
+overclaiming.
 
-**What would settle it is the measurement nobody has.** Path dependence and real seams make
-different predictions about overlap: if the boundaries are conventional, the layers should
-substantially co-fire on the same traffic; if they track distinct failure modes, they should
-not. That is Q1, and Q1 has no published answer. **So the strongest objection to the thesis
-and the largest gap in the public record are the same fact**, which is a good reason for the
-post to end pointing at it rather than pretending to close it.
+| Evidence                   | Role              | What it can and cannot support                                                                                                                                                                                          |
+| -------------------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **The tool investigation** | **Origin**        | The seams are visible in what the available tools actually do, and in what falls between them. Nothing on offer spans all four. This is where the decomposition came from. It cannot show the decomposition is minimal. |
+| **The convergence**        | **Corroboration** | Other teams surveying the same ground landed on substantially the same seams, and one that set out to unify them preserved them anyway. Checkable, but a shared citation ancestry limits how independent it is.         |
+| **The build**              | **Demonstration** | One worked instance, on modest hardware at close to zero budget. Shows four-layer coverage is reachable with freely available tools. It is a field report, not evidence for the decomposition.                          |
 
-The older framing of this objection is superseded but worth keeping in mind while drafting: I
-cannot demonstrate independence, and the post must not pretend otherwise.
+**The build is deliberately not the warrant.** It is constrained by one person's hardware and
+a budget of as little as possible, so the tools in it were chosen under pressures that have
+nothing to do with whether the four layers are right. Treating a constrained lab as evidence
+for an architecture is exactly the move the piece is arguing against. Its honest role is to
+answer a different and still useful question: what does four-layer coverage cost when you
+cannot buy anything?
 
-**Per D6, the piece concedes this openly and makes the concession structural.** It does not
-claim proof. It reports a convergence observed mid-stream, states plainly that shared
-intellectual ancestry is the obvious alternative explanation, and offers the narrower
-observation it can defend: shared reading does not by itself explain why teams under very
-different commercial constraints — a hyperscaler selling a managed service, an open-source
-project chasing multilingual coverage, a self-hosted lab optimizing for zero licensing cost —
-put the seams in the same places. That is weaker than proof and is stated as weaker.
+**Why four, and the live case for three or five.** Four is a current reading of a moving
+landscape, not a finding. The piece should argue the alternatives rather than concede them
+in a footnote, because a proposal that cannot survive its own counter-count is not a proposal.
 
-The objection is therefore not a hole to be patched but the post's invitation: if the
-convergence is really one lineage wearing three hats, the person who can show that has a
-better piece to write, and this one should say so explicitly.
+- **The case for three.** OpenGuardrails merged Scan and Classify into a single model and
+  still shipped a working system. If one model does both jobs, the seam between them may be
+  an implementation detail rather than a structural one.
+- **The case for five.** The input/output split inside Scan is real and documented: separate
+  scanner sets on each side, with anonymisation on the way in pairing to de-anonymisation on
+  the way out. Grounding, in the sense of checking a claim against retrieved documents by
+  entailment, is arguably a third job again rather than pattern work.
 
-A second objection, partially answered: **She et al. (2025) show the layers are
-context-fragile**, with benign retrieved documents flipping guardrail verdicts ~11% of the
-time. Defense-in-depth assumes failures are uncorrelated; if every layer degrades under the
-same RAG context, they are correlated and stacking buys less than it appears to. The post
-answers this only partially — it argues the finding strengthens the case against
-single-layer designs while conceding it weakens the reliability of the stack as a whole.
+Both cases rest on the same missing measurement as the main claim, which is the point. Four
+is where the seams currently look stable, and stability is the strongest word the evidence
+supports.
+
+**Strongest unanswered objection.** **Path dependence, and the proposal framing makes it
+sharper rather than softer.** If the layers keep reappearing only because a small field read
+the same 2024 paper (Dong et al.), then proposing them is proposing an echo. The piece does
+not get to dodge this by being modest.
+
+Note precisely where it lands: **path dependence attacks corroboration, not origin.** It says
+nothing about whether the seams are visible in the tool landscape, only about whether other
+teams finding them counts as independent support. The answer the piece can defend is that the
+trail is checkable, and that one party on it set out explicitly to unify the layers and
+preserved them as distinguishable functions anyway, dropping two rather than dissolving them.
+Seams that survive a deliberate attempt to remove them are hard seams. That is weaker than
+proof and stronger than nothing, and saying so is what the proposal register is for.
+
+**The objection that used to sit here has been promoted into the argument.** Previous versions
+conceded that nobody has published a layer overlap measurement, so four is not shown to be
+minimal or complete. That is still true, and it is now stated as part of the claim rather than
+defended against. See "Why four, and the live case for three or five" above.
 
 **Demoted.**
 
-- **Palit & Woods (2025) benchmarking of LLM Guard** — validated a tool that has since been
-  archived. Drops from a supporting finding to one clause inside the tool-churn passage.
-- **The LLM Guard 15-input / 21-output scanner inventory** — was doing the work of proving
-  Scan is a real layer. Convergence now does that work better. Cut.
-- **The `click` / `griffe` dependency-conflict material** — genuinely good field detail, but
-  **D3** declines the packaging debate, and this argues about products rather than
-  architecture. At most one line; it no longer earns a section.
-- **Hackett et al. (2025) is repositioned, not demoted** — it was the centerpiece of the
-  honesty section; it now serves the narrower job of showing why no single layer suffices.
-- **Every "independent arrival" formulation is cut** _(2026-08-10)_ — falsified by Q2. Any
-  surviving phrasing that implies the three parties worked in isolation must go, including in
-  the distilled source doc if the post borrows from it.
+- **"The layers transfer and the choices inside them do not"** comes out entirely, along with
+  every construction that restates it. It was the previous article's thesis, not this one's.
+- **`harness_engineering` as the spine.** Demoted from the idea that explains the piece to a
+  single prose citation. The old §8, "Your details, your devil," does not survive as a
+  section.
+- **The state/withhold structure** loses its object, since the withheld mechanism was the tie
+  itself. The exec summary now states the proposal outright, which is what a proposal needs.
+- **The build as warrant.** Every earlier version let the stack argue for the decomposition.
+  It cannot: it was assembled under hardware and budget constraints unrelated to whether four
+  layers are right, and a constrained lab presented as architectural evidence is the move this
+  piece is arguing against. The build itself is not demoted. Demonstration is a different
+  scope from warrant, not a lesser one, and it answers a question the other evidence cannot:
+  what four-layer coverage costs when you cannot buy anything.
+- **Still demoted from the previous pass, unchanged:** "Structure is the layer nobody sells
+  you" (factually wrong, replaced by Structure having its own industry); the 1B to 8B
+  escalation as a live argument (contradicted by r=0.21, p=0.48, n=14, and surviving only as
+  a vendor claim independent work does not support); every "independent arrival" formulation
+  (falsified at Q2).
 
-**Promoted.** **Dong et al. (2024)** moves from absent to load-bearing. It is simultaneously
-the common ancestor that kills the independence claim, peer-reviewed support for "no single
-solution suffices," and the first checkpoint on the citation trail the thesis now runs on.
-It should appear early in the post, not in a footnote.
+**Promoted.**
+
+- **The tool investigation becomes the warrant and the narrative.** Survey what exists, find
+  what falls between the tools, and only then build one instance of the result. This is what
+  makes the piece a proposal rather than a taxonomy, and it is the through-line the previous
+  two theses were substituting for.
+- **The constraint becomes a scope statement rather than an apology.** Modest hardware and a
+  near-zero budget define who the piece serves: a reader assembling four-layer coverage from
+  freely available tools. That is more useful than a survey written from an unlimited budget,
+  and it explains the absences in the stack without special pleading.
+- **The counter-count becomes live argument.** The case for three and the case for five are
+  made on their own evidence rather than conceded, which is what a proposal owes its reader.
+- **Wang & Li (2025) becomes the single most load-bearing source.** The unification attempt
+  that kept the seams is now the strongest evidence in the piece, so its ⚠ sourcing limit
+  matters more than it did.
+- **Harsh et al. (2026) against Young (2025) stays central but changes job.** It is no longer
+  proof that "the choices are local." It is evidence that the decomposition cannot be
+  shortcut by buying a good classifier.
+- **Dong et al. (2024)** remains the common ancestor and the trail's first checkpoint.
 
 **Publish gates.**
 
 _Must close before publication:_
 
-- ~~The Springer survey~~ — **closed by D5.** Cut, along with every claim resting on it.
-- ~~The NLI grounding component~~ — **closed by research, 2026-08-10.** Sourced: NLI
-  entailment as the grounding primitive, the SummaC → AlignScore → MiniCheck → HHEM lineage,
-  and Tamber et al. (2025) on the documented limits of current detectors.
-- **Any surviving `click<=8.2.0` line** must be labeled a first-hand observation, since it
-  could not be confirmed upstream. If the demotion above removes it, this gate closes itself.
-
-_Open questions the post should name as invitations, per D6:_
-
-- **Layer overlap is unmeasured, and no published measurement exists** (validated negative,
-  Q1). What fraction of what Classify flags did Scan already catch? Answerable only from
-  shadow-mode logs. This is also the test that would separate real seams from path
-  dependence, which makes it the post's closing ask.
-- **Whether model alignment alone covers most of what Scan catches** — unrebutted since D5,
-  and no verifiable source found in Q3.
-- ~~Whether the convergence reflects independent arrival or shared ancestry~~ — **closed by
-  Q2: shared ancestry, demonstrated.** Now stated as fact in the post rather than posed as a
-  question.
-
-_Additional publication constraint, per Q2:_ the post must not describe the three bodies as
-independent, and must cite Dong et al. (2024) when it introduces the trio, since that paper
-grouped them first.
+- **Model weight licences for ShieldGemma and Granite Guardian.** Only the paper licences
+  (CC BY 4.0) are confirmed, and those say nothing about the weights. Gemma ships under Gemma
+  Terms of Use rather than an OSI licence.
+- **Every VRAM figure** is secondary sourced. Confirm or drop.
+- **Per engine numbers from JSONSchemaBench** were never extracted; the claims circulating
+  about Outlines compliance and compile times come from a blog. Fetch the paper or omit.
+- **Any surviving `click` line** must be labelled a first-hand observation.
+- ~~**⚠ Wang & Li (2025) was read at abstract and related-work level only.**~~ **Closed
+  2026-08-27**, read in full at v2. The claim came back stronger, with a direct quote from
+  the authors' own contribution list, and two corrections recorded in Findings.
 
 _May ship flagged:_
 
-- Meta model cards are undated and versioned in place — cite `n.d.` with retrieval dates.
-- Prompt Guard 2 figures are vendor-reported against a private benchmark — say so inline.
-- Presidio's exact release version came from a secondary summary — soften or omit the number.
-- OpenGuardrails' 119-language and 98%-accuracy figures come from the abstract only — prefer
-  its architectural facts and flag any performance number used.
+- Meta model cards are undated; cite `n.d.` with retrieval dates.
+- Prompt Guard 2 and ShieldGemma performance figures are vendor reported; say so inline.
+- Harsh et al. scores models against NIST AI RMF categories, which disadvantages models
+  trained to a different taxonomy, Llama Guard included. State the confound wherever the
+  33.32% recall figure appears.
 
-**D7 — §6 cites back to the "devil is in your details" argument.** _(author, 2026-08-10)_
-Structure's absence from every bundle is not an accident of product roadmaps; it is the
-`harness_engineering` thesis showing up in guardrails. That post argued that what you can buy
-is the inexpensive, transferable artifact, while what actually creates value is local and
-cannot be bought at any scale.
+_Open questions the post should name as invitations, per D6:_
 
-Applied here, it **explains** the §6 observation rather than merely restating it. Scan,
-Classify, and Dialog are all sellable because their subject matter generalizes: harmful
-content is harmful for every customer, injection looks like injection everywhere, and even
-denied topics are a list a vendor can let you fill in. **A schema contract does not
-generalize.** It is defined entirely by which of your producers emits it and which of your
-consumers breaks when it is malformed — details that are, precisely, yours and yours alone.
-That is why no vendor ships the fourth layer, and why the reader who bought three cannot buy
-the fourth.
+- Layer overlap is unmeasured and no published measurement exists.
+- Whether model alignment alone covers most of what Scan catches, unrebutted since D5.
+- Which guard model is right for a given stack, which is the question this piece argues
+  cannot be answered from the literature at all.
 
-Cite in APA prose like any other source, not as an internal link. ⚠ **No post on this site
-currently links to another** — the convention is prose citation with a reference entry, and
-this would be the first self-citation; do not invent a cross-linking pattern to accommodate
-it. Reference entry to add at draft time: _Mangini, E. (2026, July 17). Harness engineering:
-The devil is in your details. https://emangini.com/blog/2026/harness_engineering_ (slug
-verified against `velite.config.ts`, which strips only the leading `blog/`, so the year stays
-in the path).
+**The XGrammar and vLLM `auto` default debt closed 2026-08-12** against primary sources and
+is not carried forward.
+
+## Thesis: superseded 2026-08-11 version (retained as history)
+
+> Replaced 2026-08-27 per D7. Retained because the discarded 2026-08-10 draft and the
+> superseded outline below both descend from it, and the trail is the only way to date a
+> stray paragraph.
+
+**Sentence.** The four layers transfer between systems and the choices inside them do not:
+two credible benchmarks rank the same guard models in opposite orders, so the only evidence
+that can pick yours is your own traffic, for the same reason nobody can sell you the layer
+that validates your own schemas.
+
+**The unifying idea, added 2026-08-11 (author).** Both halves of this piece have the same
+root cause, and it is one the author has argued before. In `harness_engineering` the claim
+was that what you can buy is the inexpensive, transferable artifact, while what actually
+creates value is local and cannot be bought at any scale. **The devil is in your details.**
+
+Guardrails turn out to be a clean instance:
+
+- **The layers are the transferable artifact.** They generalise. Three groups working under
+  very different constraints landed on substantially the same decomposition, and a reader can
+  adopt the layer model without adopting anything else.
+- **The choices inside the layers are the local, unbuyable part.** Structure cannot be sold
+  because the schema contract is defined entirely by your producers and your consumers. And
+  the Classify model cannot be chosen from the literature because the literature contradicts
+  itself: Harsh et al. rank Qwen3Guard first on recall while Young measures it collapsing
+  from 91.0% to 33.8% on unseen attacks. Both are credible. Neither can pick for you.
+
+The tie is exact rather than decorative. **The only way to select a guard model is to try it
+on your own traffic, against your own taxonomy, in your own deployment.** Your details. Your
+devil. That is why the piece ends by asking for a measurement rather than issuing a
+recommendation, and it is why the layer discipline is the only part of this that transfers.
+
+**Delta from hypothesis.** **Replaced, for the second time, and this one is structural.**
+The four layers have never moved. The warrant beneath them has now been rebuilt three times:
+first "here is why each layer is necessary" argued from one stack; then "three parties
+converged independently," falsified when the citation trail showed they read each other;
+now "the layers transfer and the choices do not," which is the first version that explains
+both the convergence and the churn with a single mechanism.
+
+The trigger for this revision was two research findings that broke earlier claims:
+
+1. **Structure is not unsold.** A healthy market exists, split between validate-then-retry
+   (Guardrails AI, Instructor, BAML) and constrain-during-generation (Guidance, Outlines,
+   XGrammar, llama.cpp, plus native OpenAI and Gemini modes). The surviving claim is narrower
+   and better: no guardrail platform bundles Structure, a separate industry solves it, and
+   the two worlds barely cite each other. **A seam that grows its own industry is a harder
+   seam than one nobody serves.**
+2. **Guard model selection is unresolvable from published evidence.** Two credible benchmarks
+   disagree by roughly fifty points on the same models; size does not predict recall
+   (r=0.21, p=0.48, n=14); and every model tested is badly miscalibrated under jailbreak
+   (Liu et al., 2024).
+
+**Strongest unanswered objection.** **If the choices are local, why should the layers
+generalise?** The same reasoning that makes tool selection unbuyable could be turned on the
+decomposition itself: perhaps the four layers are also local, and they merely look universal
+because a small field read the same 2024 paper. Path dependence, in other words, now aimed
+at the surviving half of the thesis.
+
+The answer the piece can defend, and it is a real answer rather than a dodge: the two claims
+have different evidence. Nothing generalises about guard model rankings, and two benchmarks
+demonstrate that directly by contradicting each other. The layer decomposition, by contrast,
+keeps reappearing across parties with sharply different commercial constraints, including
+one that explicitly set out to unify it and preserved the boundaries anyway. That is weaker
+than proof and stronger than nothing, and it should be stated as exactly that.
+
+**The second objection, which the piece must not dodge:** "measure it on your own traffic"
+is unhelpful advice for a reader who has no shadow mode logs and no labelled traffic. The
+honest response is that this is a real limitation of the recommendation, not a hidden virtue,
+and the piece should say who it does not help.
+
+**Demoted.**
+
+- **"Structure is the layer nobody sells you"** is factually wrong and comes out. It is
+  replaced by the stronger version: Structure has its own industry, and that industry is the
+  evidence.
+- **The 1B to 8B escalation argument**, built on Meta's own F1 figures of 0.899 against
+  0.939, is now contradicted by an independent finding that model size does not predict
+  recall. It survives only as an example of a vendor claim that independent work does not
+  support, which is a different and more useful role.
+- **Every "independent arrival" formulation** stays cut, per Q2.
+
+**Promoted.**
+
+- **Dong et al. (2024)** remains load-bearing as the common ancestor and the trail's first
+  checkpoint.
+- **Harsh et al. (2026) against Young (2025)** becomes the centrepiece of the tool selection
+  argument. The contradiction between them is the evidence, so both must be presented fairly
+  and neither used to win.
+- **`harness_engineering` moves from a callback in one section to the spine of the piece.**
+  It now explains Structure and Classify with the same idea.
+
+**Publish gates.**
+
+_Must close before publication:_
+
+- **Model weight licences for ShieldGemma and Granite Guardian.** Only the paper licences
+  (CC BY 4.0) are confirmed, and those say nothing about the weights. Gemma ships under Gemma
+  Terms of Use rather than an OSI licence. Do not state either as fact until checked against
+  the model cards.
+- **Every VRAM figure** is secondary sourced. Confirm or drop.
+- **Per engine numbers from JSONSchemaBench** were never extracted; the claims circulating
+  about Outlines compliance and compile times come from a blog. Fetch the paper or omit.
+- **The claim that XGrammar is the default backend in vLLM, SGLang and TensorRT-LLM** is
+  secondary sourced and load-bearing for the Structure argument. Confirm it.
+- **Any surviving `click` line** must be labelled a first-hand observation.
+
+_May ship flagged:_
+
+- Meta model cards are undated; cite `n.d.` with retrieval dates.
+- Prompt Guard 2 and ShieldGemma performance figures are vendor reported; say so inline.
+- Harsh et al. scores models against NIST AI RMF categories, which disadvantages models
+  trained to a different taxonomy, Llama Guard included. State the confound wherever the
+  33.32% recall figure appears.
+
+_Open questions the post should name as invitations, per D6:_
+
+- Layer overlap is unmeasured and no published measurement exists.
+- Whether model alignment alone covers most of what Scan catches, unrebutted since D5.
+- Which guard model is right for a given stack, which is the question this piece argues
+  cannot be answered from the literature at all.
 
 ## Outline
 
-**Register. Grey paper**, target ~25–30k characters with a full APA reference list — shorter
-than `harness_engineering` (~50k) because the thesis is narrower, but well past essay length.
-Three things force grey paper rather than essay: twenty references that must be listed, an
-honesty apparatus the thesis depends on (⚠ flags, first-hand claims labeled as such), and a
-citation-trail argument that only works if the trail is actually shown. An essay at ~7k would
-have to assert the trail instead of tracing it, which is the one thing this piece cannot do.
+**Register. Grey paper**, target 35k to 40k characters, full APA reference list. Unchanged
+across all three outline generations. The structure keeps changing; the length does not.
 
-**Harvested from Decisions:** D1 fixes the vocabulary section (§2). D3 rules out any
-unification-vs-layering section. D4 supplies §4 and §5. D6 supplies §10 and §11. D5 sets the
-concession in §10. That is six of eleven sections already settled by prior decisions.
+**Shape (author, 2026-08-27, revised after the D7 thesis): Minto pyramid over the three
+evidence roles.** A short executive summary carries the proposal, then the argument descends
+through the three kinds of evidence the thesis names, in the order that makes each one
+answerable: **origin**, then **corroboration**, then **demonstration**. The exec summary is
+the deliverable, not a teaser. A reader who stops there leaves with the four layers and the
+proposal.
 
-| #   | Section                                   | Claim it makes                                                                                                                                                                                                                                                  | Evidence                                                                                                                                                        | Debt                                                                                                    |
-| --- | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| 1   | The question with a false premise         | "Which guardrail should I use" presumes a single product, and that premise is what produces one-scanner architectures.                                                                                                                                          | OWASP (2025) layered mitigation; Beurer-Kellner et al. (2025) six patterns                                                                                      | —                                                                                                       |
-| 2   | Layer is not tool; tier is not layer      | Layer count and tool count are independent axes, and tiers run vertically inside one layer.                                                                                                                                                                     | Llama Guard 1B→8B escalation inside Classify; Meta (n.d.-a) F1 0.899 vs 0.939                                                                                   | Must land before §3 or the rest misreads (D1)                                                           |
-| 3   | The four layers and the one job each does | Each layer catches a failure mode the other three structurally cannot.                                                                                                                                                                                          | Inan et al. (2023); Rebedea et al. (2023); Guardrails AI (n.d.) re-ask; Prompt Guard 2 · Presidio · NLI for Scan                                                | ⚠ Prompt Guard 2 figures vendor-reported — say so inline. ⚠ HHEM download count vendor-reported — omit  |
-| 4   | The citation trail                        | The field converged on these seams in public, and the trail is checkable: Dong et al. grouped the trio and concluded no single solution suffices; OpenGuardrails benchmarks against that lineage; AWS ships the same seams under different commercial pressure. | Dong et al. (2024); Wang & Li (2025); AWS (n.d.)                                                                                                                | **Must not say "independent"** (Q2). Cite Dong when introducing the trio                                |
-| 5   | The seams survive unification             | The project that set out to unify the layers kept them as distinguishable functions and dropped the rest rather than dissolving them — seams that survive a deliberate unification attempt are hard seams.                                                      | Wang & Li (2025) related work + eval tables; AWS separate configurable policies                                                                                 | ⚠ OpenGuardrails detail is from abstract and related work only                                          |
-| 6   | Structure is the layer nobody sells you   | Structure is absent from every bundle _because_ a schema contract does not generalize — the other three layers are sellable precisely because their subject matter does. The reader who bought three layers cannot buy the fourth.                              | AWS automated reasoning ≠ schema/re-ask; absent in OpenGuardrails; Guardrails AI (n.d.) re-ask; **Mangini (2026)** on the buyable artifact vs. the local detail | Self-citation in APA prose, not an internal link (D7)                                                   |
-| 7   | Every layer is individually unreliable    | The layers are evadable and context-fragile, which is the argument for composing them and against trusting any one of them.                                                                                                                                     | Hackett et al. (2025) up to 100% evasion; She et al. (2025) ~11%/~8% flip on benign context; Huang et al. (2025) FP 0.1%–13.1%                                  | ⚠ Hackett predates Prompt Guard 2 — state it                                                            |
-| 8   | Engineering realities                     | Fail open, ship in shadow, and expect packaging to dictate deployment.                                                                                                                                                                                          | Huang et al. (2025) FP spread justifies shadow; NVIDIA (n.d.) `self check input`; first-hand Colang report                                                      | ⚠ Colang misfire is a field report, label it. `click` line ≤1 sentence, labeled first-hand, or cut (D3) |
-| 9   | Name layers by job, because tools churn   | The layer outlives the tool: the archived scanner proves it, and the de-bundling showed the seam was already in the right place.                                                                                                                                | Protect AI (2026) archive; Presidio and the NLI/`FactualConsistency` lineage already inside the retired tool                                                    | Palit & Woods (2025) reduced to a single clause here                                                    |
-| 10  | What none of us have measured             | Path dependence is the strongest objection, overlap data would settle it, and no such measurement is published.                                                                                                                                                 | Q1 validated negative; Q3 unrebutted per D5                                                                                                                     | This section _is_ the debt — answers the thesis-gate objection                                          |
-| 11  | A report from mid-stream                  | This is not a recommendation but a position to argue with; here is what would change it.                                                                                                                                                                        | D6                                                                                                                                                              | —                                                                                                       |
+**The state/withhold rule is gone.** It existed to hold back a mechanism that no longer
+exists in the piece. A proposal states itself outright, so §1 says what it is proposing and
+why the count is provisional, and nothing is held in reserve for a reveal.
+
+**Part order follows the thesis, not the drama.** Origin first, because a proposal has to say
+where it came from before it says who agrees. Corroboration second, because that is what path
+dependence attacks and it needs the origin already on the table to be answerable.
+Demonstration third, because a constrained build is only interesting once the reader knows it
+is not being offered as proof.
+
+**Harvested from Decisions.** D1 keeps "tier" out entirely. D3 rules out any unification
+versus layering section. D4 supplies the citation-trail framing at §6 and §7. D5 keeps the
+Springer survey out and leaves Q3 unrebutted, named at §11. D6 puts the mid-stream framing in
+the exec summary and the invitation at §11. **D7 caps `harness_engineering` at a single APA
+prose citation**, placed at §4 where the contract argument makes it genuinely relevant, and
+nowhere else.
+
+### Part 1. The proposal
+
+| #   | Section                           | Claim it makes                                                                                                                                                                                                                                                                          | Evidence                                                                                      | Debt                                                                                                                                                    |
+| --- | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | The four layers, and the proposal | Here are four problems, each catching a failure the others structurally cannot. Four is where the decomposition currently looks stable, not a finding. Take it as a proposal, and take the rest of the piece as the evidence I have for it, including the parts that cut the other way. | Inan et al. (2023); Rebedea et al. (2023); one sentence per layer on the failure mode it owns | **Drafted, 2,072 chars.** No product names. D1: no "tier". Says "proposal" outright and names the origin as investigation, not the build. D6 lives here |
+
+### Part 2. Origin: what the tool landscape actually looks like
+
+_Where the four came from. The seams are visible in what the available tools do and in what
+falls between them, which is why this part runs before anyone else's agreement is invoked._
+
+| #   | Section                                                                | Claim it makes                                                                                                                                                                                                                                                                                                              | Evidence                                                                                                                                                                                                                                   | Debt                                                                                                                                                                                                                                                                                                                                         |
+| --- | ---------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2   | The question I could not answer                                        | Clients ask which guardrail to run. I went to the literature to answer properly, and it contradicts itself: two credible benchmarks rank the same guard models in opposite orders.                                                                                                                                          | Harsh et al. (2026) Qwen3Guard 83.97% recall, Llama Guard 33.32%; Young (2025) Qwen3Guard 91.0% collapsing to 33.8% on unseen attacks, Granite Guardian holding within 6.5%                                                                | Present both fairly; neither wins. State the NIST taxonomy confound wherever 33.32% appears                                                                                                                                                                                                                                                  |
+| 3   | The landscape, and what falls between the tools                        | Here is the full field on publisher, size, licence and language. No tool spans all four jobs, and the gaps between what they do are where the seams became visible. **This is the origin of the decomposition.**                                                                                                            | Comparison across Llama Guard, Qwen3Guard, ShieldGemma, WildGuard, Granite Guardian, Nemotron; size versus recall r=0.21, p=0.48, n=14; Liu et al. (2024) miscalibration under jailbreak                                                   | ⚠ Weight licences unconfirmed for ShieldGemma and Granite Guardian. ⚠ All VRAM figures secondary. The 1B to 8B escalation appears **only** here, as a vendor claim independent work contradicts. Vendor-reported figures labelled inline; Meta cards cited `n.d.` with retrieval dates. **No "what I run" here**: the build is §9, in Part 5 |
+| 4   | Structure has its own industry, and it sells the half that generalises | The fourth seam is so real it grew a separate market, and that market ships as infrastructure: vLLM defaults to `auto`, selecting a constrained-decoding backend per request. It sells the **enforcement mechanism**, which generalises, and cannot sell the **contract**, which is yours. No guardrail bundle includes it. | vLLM (n.d.) `auto` default across xgrammar and guidance; XGrammar (n.d.) integrated in vLLM, SGLang, TensorRT-LLM, MLC-LLM, OpenVINO GenAI, Modular MAX, Apache 2.0; Guardrails AI, Instructor, BAML on the retry side; Geng et al. (2025) | **XGrammar debt closed 2026-08-12.** Do **not** write "XGrammar is the default backend"; vLLM's docs say `auto`. ⚠ JSONSchemaBench per engine numbers still not extracted. **D7: the single `harness_engineering` citation goes here, one clause, APA prose.** Never "Structure is the layer nobody sells you"                               |
+| 5   | Every layer is individually unreliable                                 | Even the tool you settle on is evadable, context fragile and badly calibrated, which argues for composing the layers and against trusting any one of them.                                                                                                                                                                  | Hackett et al. (2025) up to 100% evasion; She et al. (2025) 11% and 8% flips on benign context; Huang et al. (2025) 0.1% to 13.1% false positives                                                                                          | ⚠ Hackett predates Prompt Guard 2, state it. Concede the correlated failure problem rather than only taking the flattering reading                                                                                                                                                                                                           |
+
+### Part 3. Corroboration: who else landed here
+
+_Only now, with the origin on the table, is it worth asking who agrees. This part is what
+path dependence attacks, which is why it needs Part 2 already read._
+
+| #   | Section                        | Claim it makes                                                                                                                                                                                                                                                                                   | Evidence                                                                                                                                                                                                                                                                                                                                                                                                 | Debt                                                                                                                                                                                                                                                           |
+| --- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 6   | The citation trail             | Several teams surveying the same ground published the same seams, and the trail is checkable rather than a coincidence I am asking you to take on faith.                                                                                                                                         | Dong et al. (2024) as common ancestor; Wang & Li (2025) benchmarking against Llama Guard, ShieldGemma, WildGuard and Qwen3Guard; AWS (n.d.) seven separately configurable policies                                                                                                                                                                                                                       | **Never say "independent."** Cite Dong when introducing the trio. State plainly that shared ancestry weakens this, then hand off to §7. **Not "benchmarks against NeMo"**: that was NemoGuard-8B, a classifier                                                 |
+| 7   | The seams that would not merge | The project with "Unified" in its title merged two seams into one model and shipped **a separate pipeline** for the third, in its own words, while dropping the other two entirely. **This is the answer to path dependence:** a party free to collapse the boundary, and motivated to, did not. | Wang & Li (2025) p. 2 bullet list, quoted directly: "A separate lightweight NER/data-redaction pipeline for identifying and masking sensitive information", set against the preceding bullet's "unified large model for both content-safety and model-manipulation detection"; §3.3 "handled by the same LLM, unlike multi-model pipelines"; AWS separate policies under commercial pressure to simplify | **Debt closed 2026-08-27, read in full at v2.** Quote the bullet pair directly; it is stronger than any paraphrase. **Do not say the paper benchmarks against NeMo Guardrails**: its eval includes NemoGuard-8B, a classifier, not the Colang dialog framework |
+
+### Part 4. The count
+
+| #   | Section                                  | Claim it makes                                                                                                                                                                                  | Evidence                                                                                                                                                                                                                                                                                                                                                       | Debt                                                                                                                                                                                                      |
+| --- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 8   | Why four, and the case for three or five | Four is where the seams currently look stable, not a finding. Here is the real case for three, here is the real case for five, and here is why I would rather argue them than assume them away. | **Three:** Wang & Li (2025) merged Scan and Classify into one model and still shipped. **Five:** the input/output split inside Scan is documented, with anonymisation on the way in pairing to de-anonymisation on the way out; grounding by NLI entailment is arguably a third job again. Both rest on the same missing overlap measurement as the main claim | This section is why the thesis can say "currently looks stable" honestly. Argue both counts on their evidence; do not stage them as strawmen to knock down. If either reads as stronger than four, say so |
+
+### Part 5. Demonstration: what it costs when you cannot buy anything
+
+_A worked instance, not evidence for the decomposition. Its job is to answer a question the
+other two parts cannot._
+
+| #   | Section                            | Claim it makes                                                                                                                                                                                                                                                                        | Evidence                                                                                                                                                                                                                                         | Debt                                                                                                                                                                                                                             |
+| --- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 9   | Four layers on a budget of nothing | Here is one assembly of all four using freely available tools on modest hardware, and here is what the constraints cost. The tool choices were made under pressures unrelated to whether the decomposition is right, which is exactly why this is a field report and not an argument. | Prompt Guard 2, Presidio, NLI grounding, Llama Guard, NeMo, Guardrails AI; the archive story: Protect AI (2026) and the de-bundling that worked because Presidio and the NLI job were already inside; Palit & Woods (2025) reduced to one clause | **Explicit scope statement**: freely available tools, modest hardware, near-zero budget. Label every first-hand claim a field report. Do **not** let this section argue for the four layers. `click` capped at one sentence (D3) |
+| 10  | Engineering realities              | Fail open, ship in shadow, and expect packaging to dictate deployment. This is how you get the traffic §11 says nobody has.                                                                                                                                                           | Huang et al. (2025) false positive spread; NVIDIA (n.d.) `self check input`; first-hand Colang                                                                                                                                                   | Label first-hand claims as field reports                                                                                                                                                                                         |
+
+### Close
+
+| #   | Section                                          | Claim it makes                                                                                                                                                           | Evidence                                                                | Debt                                                                                                                                                                                                           |
+| --- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 11  | What none of us have measured, and where to push | The overlap measurement would settle the count and would also pick your guard model. Nobody has published one, I do not have one either, and that is where to push back. | Q1 validated negative; Q3 unrebutted per D5; the count argument from §8 | Must concede that "measure it on your own traffic" is useless to a reader with no shadow logs. D6 lands here: this is a position to argue with, and the invitation must be specific about what would change it |
 
 ### Checks
 
-- **Does the order build the thesis?** Reading the claims column top to bottom: the buying
-  question is wrong → layers are not tools → here are the four → the field converged on them
-  in public → the seams survived an attempt to remove them → one is missing from every bundle
-  → none is individually reliable → here is what running them costs → the tools churn but the
-  layers do not → and here is what nobody has measured. That composes the thesis sentence.
-- **Is the strongest objection answered?** Yes — §10 takes path dependence directly, and
-  concedes rather than closes it, per D6.
-- **Sections carrying pre-publication debt:** §3 (vendor-reported figures), §5
-  (abstract-only sourcing), §7 (Hackett predates Prompt Guard 2), §8 (`click` labeled or
-  cut; Colang labeled). §4 carries the hard constraint against "independent."
-- **Anything demoted that resurfaced?** No. The LLM Guard scanner inventory is absent, Palit
-  is one clause in §9, and the dependency material is capped at one sentence in §8.
+- **Does the order build the thesis sentence?** Reading the claims column top to bottom: here
+  are four layers, offered as a proposal. No tool on the market spans them, the benchmarks
+  cannot even rank the tools consistently, one seam grew its own industry, and no single layer
+  is reliable alone. Others surveying the same ground published the same seams, and the one
+  that set out to unify them kept them anyway. Four is where that looks stable, and here is
+  the honest case for three and for five. Here is one build of it at near-zero cost, here is
+  what running it takes, and here is the measurement none of us has. That composes
+  "guardrails decompose into layers rather than products, and four is where that
+  decomposition currently looks stable."
+- **Is the strongest objection answered?** Yes, at §7, and the placement is now structural
+  rather than incidental. Path dependence attacks corroboration, so it is answered inside
+  Part 3 where corroboration is made, immediately after §6 concedes the shared ancestry that
+  gives the objection its force. §11 no longer carries a residual of it; it carries the
+  measurement gap, which the thesis promoted into the argument at §8.
+- **Sections carrying pre-publication debt:** §2, §3, §4, §5, §7, §9. **§7 is the one that
+  changed severity**: Wang & Li was tolerable as abstract-level sourcing when it was one of
+  three supporting citations and is not tolerable now that it carries the answer to the
+  strongest objection. §4's XGrammar debt closed 2026-08-12.
+- **Anything demoted that resurfaced?** No. The transfer framing is absent. "Your details,
+  your devil" is gone as a section and `harness_engineering` appears once, as one clause at
+  §4. The 1B to 8B escalation appears only at §3 in its assigned role. "Independent arrival"
+  is absent. "Nobody sells you Structure" is replaced by §4. The build no longer argues for
+  the decomposition anywhere.
+
+### Structural changes from the previous outline
+
+1. **The parts are now the three evidence roles from the D7 thesis**: origin, corroboration,
+   demonstration, plus the count. The previous parts were "why the choices do not transfer,"
+   "why the layers do," and "one mechanism explains both," all of which belonged to the
+   superseded thesis.
+2. **"Your details, your devil" is gone.** `harness_engineering` drops from the spine of the
+   piece to a single APA prose clause at §4.
+3. **Structure moves from §7 to §4, into Origin.** A seam with its own separate industry is
+   landscape evidence, not a mechanism reveal, and it belongs beside the other three.
+4. **The build gets its own section at §9 and is removed from §3.** Previously "what I run"
+   sat inside the landscape survey, which is exactly what let a constrained lab read as
+   evidence for the architecture.
+5. **§8 is new.** The count was previously an objection to concede; the thesis promoted it to
+   an argument the piece makes.
+6. **The state/withhold rule is gone**, along with the reveal it was holding back.
+7. **§7's sourcing debt was upgraded to must-close** as a direct consequence of promoting
+   Wang & Li.
+8. **Eleven sections stay eleven**, but only §1, §2 and §5 keep the job they had.
+
+## Outline — superseded 2026-08-11 version (retained as history)
+
+> Replaced 2026-08-27 by the Minto pyramid above. Retained because the 2026-08-10 draft was
+> written against the version before _this_ one, and the trail of what moved when is the only
+> way to tell which generation any given paragraph belongs to.
+
+**Register. Grey paper**, target 35k to 40k characters, full APA reference list.
+
+**Shape (author, 2026-08-11): answer first, then story.** The piece opens by handing over the
+four layers with no preamble and explicitly releases the reader who only came for that. The
+argument then restarts as a narrative: a question I could not answer, a literature that
+contradicts itself, and the reframe that follows. This replaces the previous
+argument-shaped order, which had no arc and buried its strongest hook at section seven.
+
+**Harvested from Decisions.** D1 keeps "tier" out entirely. D3 rules out any unification
+versus layering section. D4 supplies §5 and §6. **D6 moves to the front**, since naming the
+genre early is what buys permission to leave things unresolved later. D7 places the harness
+tie, which the thesis promoted to the spine at §8.
+
+| #   | Section                                                                | Claim it makes                                                                                                                                                                                                                                                                                                                                           | Evidence                                                                                                                                                                                                                                                         | Debt                                                                                                                                                                                                                                   |
+| --- | ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | The four layers                                                        | Here are the four problems, each irreducible to the others. This is the part that transfers, and it is the whole deliverable.                                                                                                                                                                                                                            | Inan et al. (2023); Rebedea et al. (2023); per layer failure modes. Minimal layer versus tool distinction inline, only as much as the list needs                                                                                                                 | No product names anywhere in this section. D1: no "tier"                                                                                                                                                                               |
+| 2   | If you stopped reading here                                            | The layers are the transferable part and you now have them. What follows is a report from the middle of an unsettled question, not a recommendation.                                                                                                                                                                                                     | Author framing; **D6 relocated from the close to the open**                                                                                                                                                                                                      | Must genuinely release the reader rather than tease. The permission has to be real or the move is a trick                                                                                                                              |
+| 3   | The question I could not answer                                        | Clients ask which guardrail to run. I went to the literature to answer properly, and it contradicts itself: two credible benchmarks rank the same guard models in opposite orders.                                                                                                                                                                       | Harsh et al. (2026) Qwen3Guard 83.97% recall, Llama Guard 33.32%; Young (2025) Qwen3Guard 91.0% collapsing to 33.8% on unseen attacks, Granite Guardian holding within 6.5%                                                                                      | Present both fairly; neither wins. State the NIST taxonomy confound wherever 33.32% appears                                                                                                                                            |
+| 4   | The landscape, and why it cannot decide                                | Here is the full field on publisher, size, licence and language, here is what I run, and here is why none of it picks for you.                                                                                                                                                                                                                           | Comparison across Llama Guard, Qwen3Guard, ShieldGemma, WildGuard, Granite Guardian, Nemotron; size versus recall r=0.21, p=0.48, n=14; Liu et al. (2024) miscalibration under jailbreak; my own Prompt Guard 2, Presidio, NLI, Llama Guard, NeMo, Guardrails AI | ⚠ Weight licences unconfirmed for ShieldGemma and Granite Guardian. ⚠ All VRAM figures secondary. The 1B to 8B escalation appears **only** here, as a vendor claim independent work contradicts                                        |
+| 5   | So what does transfer                                                  | The layers do, and here is why that is more than my taxonomy: the field converged on them in public and the trail is checkable.                                                                                                                                                                                                                          | Dong et al. (2024) as common ancestor; Wang & Li (2025) benchmarking against Llama Guard and NeMo; AWS (n.d.) seven separately configurable policies                                                                                                             | **Never say "independent."** Cite Dong when introducing the trio                                                                                                                                                                       |
+| 6   | The seams that would not merge                                         | The project that set out to unify these layers kept them as distinguishable functions and dropped the rest rather than dissolving them.                                                                                                                                                                                                                  | Wang & Li (2025) related work and eval tables; AWS separate policies under commercial pressure to simplify                                                                                                                                                       | ⚠ OpenGuardrails read at abstract and related work level only                                                                                                                                                                          |
+| 7   | Structure has its own industry, and it sells the half that generalises | The seam is so real it grew a separate market, and that market ships as infrastructure: vLLM defaults to `auto`, selecting a constrained-decoding backend per request, so you do not choose one at all. But it sells the **enforcement mechanism**, which generalises, and cannot sell the **contract**, which is yours.                                 | vLLM (n.d.) `auto` default across xgrammar and guidance; XGrammar (n.d.) integrated in vLLM, SGLang, TensorRT-LLM, MLC-LLM, OpenVINO GenAI, Modular MAX, Apache 2.0; Guardrails AI, Instructor, BAML on the retry side; Geng et al. (2025)                       | **Verified 2026-08-12, debt closed.** Do **not** write "XGrammar is the default backend": that is the project's own README wording and vLLM's docs say the default is `auto`. ⚠ JSONSchemaBench per engine numbers still not extracted |
+| 8   | Your details, your devil                                               | The layers are the transferable artifact and the choices inside them are local and unbuyable. Three instances, one mechanism: the schema is yours, the traffic is yours, the seam is yours. **§7 supplies the sharpest form: the industry sells the enforcement because enforcement generalises, and leaves you the contract because contracts do not.** | Mangini (2026); §7 and §3 as the first two instances; **the archive story merged in as the third**: Protect AI (2026), and the de-bundling that worked because Presidio and the NLI job were already inside                                                      | D7: APA prose self citation, not an internal link. This is the spine. Palit & Woods (2025) reduced to one clause here                                                                                                                  |
+| 9   | Every layer is individually unreliable                                 | The layers are evadable, context fragile and badly calibrated, which argues for composing them and against trusting any one of them.                                                                                                                                                                                                                     | Hackett et al. (2025) up to 100% evasion; She et al. (2025) 11% and 8% flips on benign context; Huang et al. (2025) 0.1% to 13.1% false positives                                                                                                                | ⚠ Hackett predates Prompt Guard 2, state it. Concede the correlated failure problem rather than only taking the flattering reading                                                                                                     |
+| 10  | Engineering realities                                                  | Fail open, ship in shadow, and expect packaging to dictate deployment.                                                                                                                                                                                                                                                                                   | Huang et al. (2025) false positive spread; NVIDIA (n.d.) `self check input`; first-hand Colang and `click`                                                                                                                                                       | Label both first-hand claims as field reports. `click` capped at one sentence (D3)                                                                                                                                                     |
+| 11  | What none of us have measured                                          | Path dependence is the strongest objection, the overlap measurement would settle it, nobody has published one, and that same measurement is what would pick your guard model.                                                                                                                                                                            | Q1 validated negative; Q3 unrebutted per D5                                                                                                                                                                                                                      | Must concede this advice is useless to a reader with no shadow logs                                                                                                                                                                    |
+| 12  | Come diverge                                                           | This is a position to argue with, and here is exactly what would change it.                                                                                                                                                                                                                                                                              | D6, paid off from §2                                                                                                                                                                                                                                             | —                                                                                                                                                                                                                                      |
+
+### Checks
+
+- **Does the order build the thesis?** Here are the four layers and they are yours to take.
+  You may stop. If you continue: I could not answer which tool to run, because the literature
+  contradicts itself. Here is the whole landscape and it still cannot decide. So what
+  transfers is the layers, and here is the evidence they are real. Even a unification attempt
+  preserved them. One of them grew its own industry. Therefore the layers transfer and the
+  choices are local, which is the same reason the tool that vanished did not take the layer
+  with it. None of the layers is individually reliable. Here is what running them costs. Here
+  is the measurement nobody has. Come argue. That composes the thesis sentence.
+- **Is the strongest objection answered?** Yes, §11 takes path dependence and concedes it,
+  and carries the second objection from the gate, that "measure it yourself" does not help a
+  reader without shadow logs.
+- **Sections carrying pre-publication debt:** §3, §4, §6, §9, §10. **§7's XGrammar debt closed
+  2026-08-12 against primary sources**, and the correction strengthened the section: the
+  verified claim is that vLLM defaults to `auto` backend selection, which is a better
+  demonstration of "infrastructure, not a product" than the vendor's own phrasing was.
+- **Anything demoted that resurfaced?** No. The 1B to 8B escalation appears only in §4 in its
+  assigned role. "Independent arrival" is absent. "Nobody sells you Structure" is replaced by
+  §7. The standalone tool churn section is gone, merged into §8.
+
+### Structural changes from the previous outline
+
+1. **The four layers move from §3 to §1**, with no preamble in front of them.
+2. **§2 releases the reader explicitly**, and moves the mid-stream framing from the close to
+   the open.
+3. **The benchmark contradiction moves from §7 to §3**, becoming the hook rather than a late
+   finding.
+4. **"What I run" merges into the landscape at §4**, after the contradiction, so it cannot be
+   read as a recommendation.
+5. **The tool churn section is gone**, merged into the spine at §8 as its third instance.
+6. **Fourteen sections become twelve.**
 
 ## References
 
@@ -785,13 +1309,19 @@ Beurer-Kellner, L., Buesser, B., Creţu, A.-M., Debenedetti, E., Dobos, D., Fabi
 
 Dong, Y., Mu, R., Jin, G., Qi, Y., Hu, J., Zhao, X., Meng, J., Ruan, W., & Huang, X. (2024). Building guardrails for large language models. In Proceedings of the 41st International Conference on Machine Learning (PMLR 235). https://doi.org/10.48550/arXiv.2402.01822
 
+Geng, S., Cooper, H., Moskal, M., Jenkins, S., Berman, J., Ranchin, N., West, R., Horvitz, E., & Nori, H. (2025, January 18). JSONSchemaBench: A rigorous benchmark of structured outputs for language models (arXiv:2501.10868). arXiv. https://doi.org/10.48550/arXiv.2501.10868 ⚠ per-engine figures not yet extracted; fetch the full paper before citing numbers
+
 Guardrails AI. (n.d.). Guards. Guardrails AI documentation. Retrieved August 4, 2026, from https://www.guardrailsai.com/docs/api_reference_markdown/guards
 
 Hackett, W., Birch, L., Trawicki, S., Suri, N., & Garraghan, P. (2025, April 15). Bypassing LLM guardrails: An empirical analysis of evasion attacks against prompt injection and jailbreak detection systems (arXiv:2504.11168). arXiv. https://doi.org/10.48550/arXiv.2504.11168
 
+Harsh, R. R., Sarmah, B., & Pasquali, S. (2026, April 10). Benchmarking open-source safety guard models: A comprehensive evaluation (arXiv:2605.28830). arXiv. https://doi.org/10.48550/arXiv.2605.28830 ⚠ peer review status not confirmed; benchmark uses its own eight-category scheme, which disadvantages models trained to a different taxonomy
+
 Huang, Y., Bray, N., Rao, A., Ji, Y., & Hu, W. (2025, June 2). How good are the LLM guardrails on the market? A comparative study on the effectiveness of LLM content filtering across major GenAI platforms. Unit 42, Palo Alto Networks. https://unit42.paloaltonetworks.com/comparing-llm-guardrails-across-genai-platforms/
 
 Inan, H., Upasani, K., Chi, J., Rungta, R., Iyer, K., Mao, Y., Tontchev, M., Hu, Q., Fuller, B., Testuggine, D., & Khabsa, M. (2023, December 7). Llama Guard: LLM-based input-output safeguard for human-AI conversations (arXiv:2312.06674). arXiv. https://doi.org/10.48550/arXiv.2312.06674
+
+Liu, H., Huang, H., Gu, X., Wang, H., & Wang, Y. (2024, October 14). On calibration of LLM-based guard models for reliable content moderation (arXiv:2410.10414). arXiv. https://doi.org/10.48550/arXiv.2410.10414 accepted to ICLR 2025
 
 Mangini, E. (2026, July 17). Harness engineering: The devil is in your details. https://emangini.com/blog/2026/harness_engineering
 
@@ -807,9 +1337,13 @@ NVIDIA. (n.d.). Input rails. NeMo Guardrails documentation. Retrieved August 4, 
 
 OWASP. (2025). OWASP Top 10 for large language model applications 2025. OWASP Foundation. https://owasp.org/www-project-top-10-for-large-language-model-applications/assets/PDF/OWASP-Top-10-for-LLMs-v2025.pdf
 
+Padhi, I., Nagireddy, M., Cornacchia, G., Chaudhury, S., Pedapati, T., Dognin, P., Murugesan, K., Miehling, E., Santillán Cooper, M., Fraser, K., Zizzo, G., Hameed, M. Z., Purcell, M., Desmond, M., Pan, Q., Ashktorab, Z., Vejsbjerg, I., Daly, E. M., Hind, M., … Sattigeri, P. (2024, December 10). Granite Guardian (arXiv:2412.07724). arXiv. https://doi.org/10.48550/arXiv.2412.07724 ⚠ CC BY 4.0 is the paper licence; model weight licence not confirmed
+
 Palit, S., & Woods, D. (2025, May 19). Evaluating the efficacy of LLM safety solutions: The Palit benchmark dataset (arXiv:2505.13028). arXiv. https://doi.org/10.48550/arXiv.2505.13028
 
 Protect AI. (2026, July 9). LLM Guard: The security toolkit for LLM interactions [Archived code repository]. GitHub. https://github.com/protectai/llm-guard ⚠ date given is the archival date, not the publication date; repository is read-only as of that date
+
+Qwen Team. (2025, October 16). Qwen3Guard technical report (arXiv:2510.14276). arXiv. https://doi.org/10.48550/arXiv.2510.14276 ⚠ corporate author as printed; Apache 2.0 licence stated in the report but not independently confirmed against the model cards
 
 Rebedea, T., Dinu, R., Sreedhar, M., Parisien, C., & Cohen, J. (2023, October 16). NeMo Guardrails: A toolkit for controllable and safe LLM applications with programmable rails (arXiv:2310.10501). arXiv. https://doi.org/10.48550/arXiv.2310.10501
 
@@ -819,4 +1353,12 @@ Tamber, M. S., Bao, F. S., Xu, C., Luo, G., Kazi, S., Bae, M., Li, M., Mendelevi
 
 Vectara. (n.d.). Hallucination evaluation model (HHEM-2.1-Open). Hugging Face. Retrieved August 10, 2026, from https://huggingface.co/vectara/hallucination_evaluation_model ⚠ vendor source; the download count is self-reported
 
+vLLM. (n.d.). Structured outputs. vLLM documentation. Retrieved August 12, 2026, from https://docs.vllm.ai/en/latest/features/structured_outputs.html states the default backend is `auto`, selecting between xgrammar and guidance per request
+
 Wang, T., & Li, H. (2025, October 22). OpenGuardrails: A configurable, unified, and scalable guardrails platform for large language models (arXiv:2510.19169). arXiv. https://doi.org/10.48550/arXiv.2510.19169
+
+XGrammar. (n.d.). XGrammar [Code repository]. GitHub. Retrieved August 12, 2026, from https://github.com/mlc-ai/xgrammar Apache 2.0; integrated in vLLM, SGLang, TensorRT-LLM, MLC-LLM, OpenVINO GenAI and Modular MAX ⚠ the "default structured generation backend" phrasing is the project's own README claim and is contradicted by vLLM's documentation
+
+Young, R. J. (2025, November 27). Evaluating the robustness of large language model safety guardrails against adversarial attacks (arXiv:2511.22047). arXiv. https://doi.org/10.48550/arXiv.2511.22047 single author; 10 models, 1,445 prompts, 21 attack categories
+
+Zeng, W., Liu, Y., Mullins, R., Peran, L., Fernandez, J., Harkous, H., Narasimhan, K., Proud, D., Kumar, P., Radharapu, B., Sturman, O., & Wahltinez, O. (2024, July 31). ShieldGemma: Generative AI content moderation based on Gemma (arXiv:2407.21772). arXiv. https://doi.org/10.48550/arXiv.2407.21772 author list verified against the abstract page ⚠ vendor-reported +10.8% AU-PRC over Llama Guard; Gemma weights ship under Gemma Terms of Use, not confirmed here

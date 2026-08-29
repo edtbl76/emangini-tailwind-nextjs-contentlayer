@@ -6,7 +6,7 @@ description: Use when a blog post starts as an idea, hunch, opinion, or irritati
 # State the hypothesis
 
 The first stage. It exists because **research without a falsifiable claim only finds
-confirmation** — you gather what fits and never notice what doesn't.
+confirmation**: you gather what fits and never notice what doesn't.
 
 A hypothesis is not a topic. "Spec-driven development" is a topic. "SDD should be called
 Spec-Driven Delivery because the practice extends past development" is a hypothesis: it can
@@ -28,7 +28,7 @@ Create it with the stage block and the hypothesis section:
 
 - [x] Hypothesis
 - [ ] Research
-- [ ] Thesis _(gate — human approval)_
+- [ ] Thesis _(gate: human approval)_
 - [ ] Outline
 - [ ] Draft
 
@@ -53,7 +53,7 @@ Create it with the stage block and the hypothesis section:
 | Why wrong | Surfaces the rival case early    | The objection arrives from a reader instead    |
 
 **The falsifier is the one people skip and the one that matters most.** If you cannot name
-a finding that would change your mind, you are not writing an argument — you are writing an
+a finding that would change your mind, you are not writing an argument. You are writing an
 opinion with citations attached.
 
 ## Do not

@@ -119,6 +119,37 @@ export const SCHEMA_KEYS = new Set([
 /** Keys inherited from the starter template that no longer do anything. */
 export const DEAD_KEYS = new Set(['tags'])
 
+/**
+ * Posts that shipped before the no-em-dash house rule and are deliberately left alone.
+ *
+ * Rewriting published prose to satisfy a new rule is the worse trade: each occurrence
+ * needs a judgment call between a colon, a comma and a sentence split, and these read
+ * fine as they stand. Carrying an explicit list keeps `validate:all` green without
+ * softening the rule to a warning, which is how a rule stops being followed.
+ *
+ * This list is closed. New posts are expected to be clean.
+ */
+export const EM_DASH_GRANDFATHERED = new Set([
+  'data/blog/2021/accidental-complexity.mdx',
+  'data/blog/2021/should-architects-code.mdx',
+  'data/blog/2024/diversity-in-tech-hiring.mdx',
+  'data/blog/2024/ghosts.mdx',
+  'data/blog/2024/lead-from-the-toes.mdx',
+  'data/blog/2024/reimagining-team-topologies.mdx',
+  'data/blog/2024/rethinking-ats.mdx',
+  'data/blog/2024/swot-analysis.mdx',
+])
+
+/**
+ * Reduce an absolute or relative path to its `data/blog/...` suffix so grandfather
+ * lookups work regardless of how the CLI was invoked.
+ */
+export function repoRelative(filePath) {
+  const normalized = filePath.split(path.sep).join('/')
+  const at = normalized.indexOf('data/blog/')
+  return at === -1 ? normalized : normalized.slice(at)
+}
+
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/
 
 /**
@@ -362,9 +393,27 @@ export function validatePost({ raw, filePath, knownAuthors }) {
 
   // ---- Body --------------------------------------------------------------------
   const lines = maskNonProse(raw)
+  const emDashExempt = EM_DASH_GRANDFATHERED.has(repoRelative(filePath))
 
   lines.forEach((line, idx) => {
     const lineNo = idx + 1
+
+    // House style, not an MDX constraint: em dashes are forbidden in prose. Code fences
+    // and inline spans are already masked out, so a `—` reaching here is real prose.
+    if (!emDashExempt) {
+      for (let col = 0; col < line.length; col++) {
+        if (line[col] !== '—') continue
+        findings.push(
+          finding(
+            'error',
+            'em-dash',
+            lineNo,
+            `Em dash in prose: ${line.slice(Math.max(0, col - 30), col + 31).trim()}`,
+            'Use a colon when the second half explains the first, a comma for a light aside, or split into two sentences. An en dash or a double hyphen reads the same way and is not a fix.'
+          )
+        )
+      }
+    }
 
     // HTML comments are not valid in MDX v2+.
     let commentAt = line.indexOf('<!--')

@@ -1,6 +1,6 @@
 ---
 name: blog-publish
-description: Use when a blog post is finished and ready to go live — validates, builds, verifies the post actually renders, then commits to develop. Trigger on "publish this post", "ship the post", "put the post live", after blog-write and blog-validate are clean.
+description: Use when a blog post is finished and ready to go live: validates, builds, verifies the post actually renders, then commits to develop. Trigger on "publish this post", "ship the post", "put the post live", after blog-write and blog-validate are clean.
 ---
 
 # Publish a post
@@ -37,7 +37,7 @@ the source file, was truncated by a parse error. Go back to `blog-validate`.
 Then confirm visually with `yarn dev`:
 
 - The post appears in the listing on the homepage.
-- The body renders in full — scroll to the end, not just the title.
+- The body renders in full. Scroll to the end, not just the title.
 - Reference links resolve.
 
 ### If the build fails on dependencies
@@ -50,7 +50,7 @@ use** (`.yarnrc.yml` pins yarn 3.6.1). Rebuild the tree from `yarn.lock`:
 rm -rf node_modules && yarn install --immutable
 ```
 
-Plain `yarn install` will report success without fixing it — it does not prune packages it
+Plain `yarn install` will report success without fixing it; it does not prune packages it
 did not create. Never run `npm install` here.
 
 ## 3. Commit
@@ -69,7 +69,7 @@ published one.
 
 **Never add `Co-Authored-By` or any Claude/Anthropic attribution to commits.**
 
-## 4. Push — confirm first
+## 4. Push: confirm first
 
 Pushing is outward-facing. **Ask before pushing**, every time, even if a push was approved
 earlier in the session:
@@ -83,7 +83,7 @@ Then open a PR to `main` when the batch is ready.
 ## Guardrails
 
 - **Never push without explicit confirmation in the current turn.**
-- **Never commit a post with validation errors**, even if asked to hurry — the post will be
+- **Never commit a post with validation errors**, even if asked to hurry. The post will be
   invisible on the site and the failure gives no signal.
 - **Do not amend or force-push** published commits.
 - If the build fails for a reason unrelated to the post, say so plainly and stop. Do not
@@ -93,4 +93,4 @@ Then open a PR to `main` when the batch is ready.
 
 ## Next step
 
-Post live? Note anything learned in `docs/learned.md` — the Ship step of the Lite profile.
+Post live? Note anything learned in `docs/learned.md`, the Ship step of the Lite profile.

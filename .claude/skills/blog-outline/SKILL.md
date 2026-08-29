@@ -10,14 +10,14 @@ Turns the settled thesis and the decisions recorded during research into a secti
 ## Prerequisite
 
 The working doc `docs/research/<slug>.md` must contain a `## Thesis` section with
-`- [x] Thesis` ticked in the stage block. **An unapproved thesis means no outline** — the
+`- [x] Thesis` ticked in the stage block. **An unapproved thesis means no outline**: the
 order of an argument is derived from its claim, so outlining first means ordering evidence
 around a claim that may still move.
 
 ## Most of the outline already exists
 
 Ordering constraints accumulate during research and get recorded as decisions. Harvest them
-before inventing structure — on this site's SDD post, the `## Decisions` block already
+before inventing structure. On this site's SDD post, the `## Decisions` block already
 specified that the 2004 precedent opens and then steps aside, that the quality argument
 leads over the coverage argument, that the rival framing lands only after the core evidence,
 and that a polysemous term gets defined early. That is four of roughly seven sections,
@@ -32,8 +32,7 @@ Append an `## Outline` section. One row per section:
 ```markdown
 ## Outline
 
-**Register.** Essay (~7k chars) or grey paper (~50k, full APA reference list). Decide here —
-it changes section count more than any other choice.
+**Register.** Essay (~7k chars) or grey paper (~50k, full APA reference list). Decide here. It changes section count more than any other choice.
 
 | #   | Section | Claim it makes | Evidence      | Debt  |
 | --- | ------- | -------------- | ------------- | ----- |
