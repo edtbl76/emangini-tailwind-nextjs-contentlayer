@@ -63,3 +63,6 @@ yarn-error.log*
 
 # AI-DLC workspace (state, memory, audit, per-user cursors, runtime scratch).
 /aidlc/
+
+# MCP server config: AI-DLC shipped it (context7 + AWS servers), local only.
+/.mcp.json
