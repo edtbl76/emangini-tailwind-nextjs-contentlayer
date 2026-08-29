@@ -36,7 +36,7 @@ export const STAGES = [
 ]
 
 /** H2 headings present in the doc, lowercased. */
-export function headings(raw) {
+export const headings = (raw) => {
   return raw
     .split('\n')
     .filter((line) => /^##\s+/.test(line))
