@@ -313,6 +313,39 @@ describe('maskNonProse', () => {
   })
 })
 
+describe('inline SVG diagrams', () => {
+  const diagram = [
+    '<figure>',
+    '<svg viewBox="0 0 10 10" role="img">',
+    '  <title>A chart</title>',
+    '  <desc>Two curves.</desc>',
+    '  <line x1="0" y1="0" x2="10" y2="10" stroke="currentColor" />',
+    '  <path d="M0,0 C1,1 2,2 3,3" fill="none" />',
+    '  <circle cx="5" cy="5" r="1" />',
+    '  <text x="1" y="9">recall</text>',
+    '</svg>',
+    '<figcaption>Caption.</figcaption>',
+    '</figure>',
+  ].join('\n')
+
+  test('accepts a hand-drawn SVG without flagging its elements as prose', () => {
+    const findings = validatePost({ raw: post(diagram), filePath: 'data/blog/2026/x.mdx' })
+
+    assert.deepEqual(errorsOf(findings), [])
+  })
+
+  test('still catches a genuine raw angle bracket alongside an SVG', () => {
+    const findings = validatePost({
+      raw: post(`${diagram}\n\nLatency under < 100ms is the target.`),
+      filePath: 'data/blog/2026/x.mdx',
+    })
+    const errors = errorsOf(findings)
+
+    assert.equal(errors.length, 1)
+    assert.equal(errors[0].rule, 'raw-angle-bracket')
+  })
+})
+
 describe('em dashes (house style)', () => {
   test('flags an em dash in prose as an error', () => {
     const findings = validatePost({

@@ -25,6 +25,38 @@ import matter from 'gray-matter'
  */
 export const MDX_COMPONENTS = new Set(['Image', 'TOCInline'])
 
+/**
+ * Inline SVG elements. MDX passes these through the same way it passes HTML, and
+ * rehypeRaw keeps them, so a hand-drawn diagram in a post is legitimate. Kept as a
+ * separate set from HTML_ELEMENTS because the overlap is a trap: `title` and `a` are
+ * valid in both, but `text`, `path` and `desc` look exactly like prose that forgot to
+ * escape a `<`, which is the bug this file exists to catch.
+ */
+export const SVG_ELEMENTS = new Set([
+  'circle',
+  'clipPath',
+  'defs',
+  'desc',
+  'ellipse',
+  'g',
+  'line',
+  'linearGradient',
+  'marker',
+  'mask',
+  'path',
+  'pattern',
+  'polygon',
+  'polyline',
+  'radialGradient',
+  'rect',
+  'stop',
+  'svg',
+  'text',
+  'title',
+  'tspan',
+  'use',
+])
+
 /** Lowercase tags MDX passes straight through to HTML. */
 export const HTML_ELEMENTS = new Set([
   'a',
@@ -440,6 +472,7 @@ export function validatePost({ raw, filePath, knownAuthors }) {
       // JSX semantics: lowercase resolves to an intrinsic HTML element, capitalized
       // resolves to a variable that must be in scope.
       if (name && HTML_ELEMENTS.has(name)) continue
+      if (name && SVG_ELEMENTS.has(name)) continue
       if (name && MDX_COMPONENTS.has(name)) continue
 
       const excerpt = rest.slice(0, 60).trimEnd()
