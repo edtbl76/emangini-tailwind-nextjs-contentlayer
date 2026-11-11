@@ -26,9 +26,7 @@ const section = (name) => `## ${name}
 body text`
 
 const stageBlock = (ticked = []) =>
-  '## Stage
-
-' +
+  '## Stage\n\n' +
   STAGES.map((s) => {
     const label = s.name[0].toUpperCase() + s.name.slice(1)
     const gate = s.gated ? ' _(gate — human approval)_' : ''
